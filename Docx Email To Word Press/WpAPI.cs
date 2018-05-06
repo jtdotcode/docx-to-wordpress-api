@@ -11,26 +11,28 @@ namespace DocxEmailToWordPress
 {
     class WpAPI
     {
-        //public IEnumerable GetWordPressPosts()
-        //{
-        //    using (WebClient webClient = new WebClient())
-        //    {
-        //        string blogUrl = @"https://public-api.wordpress.com/rest/v1.1/sites/hendrikbulens.wordpress.com/posts/";
-        //        string response = webClient.DownloadString(blogUrl);
+        public IEnumerable GetWordPressPosts()
+        {
+            
 
-        //        WordPressBlog blogPosts = JsonConvert.DeserializeObject(response);
+            using (WebClient webClient = new WebClient())
+            {
+                string blogUrl = @"https://public-api.wordpress.com/rest/v1.1/sites/hendrikbulens.wordpress.com/posts/";
+                string response = webClient.DownloadString(blogUrl);
 
-        //        IEnumerable posts = blogPosts.posts.OrderByDescending(x => x.date).Take(3).Select(x => new BlogPost()
-        //        {
-        //            Title = x.title,
-        //            Message = x.excerpt.CharacterLimit(150),
-        //            PublishedOn = x.date,
-        //            Comments = x.discussion.comment_count,
-        //            Link = x.URL
-        //        });
+                WpBlogPosts wpBlogPosts = JsonConvert.DeserializeObject(response);
 
-        //        return posts;
-        //    }
+                IEnumerable posts = wpBlogPosts.posts.OrderByDescending(x => x.date).Take(3).Select(x => new BlogPost()
+                {
+                    Title = x.title,
+                    Message = x.excerpt.CharacterLimit(150),
+                    PublishedOn = x.date,
+                    Comments = x.discussion.comment_count,
+                    Link = x.URL
+                });
+
+                return posts;
+            }
         }
 
 

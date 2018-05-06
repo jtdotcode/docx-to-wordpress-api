@@ -24,13 +24,10 @@ namespace DocxEmailToWordPress
         ///  Get the file name 
         /// </summary> 
         /// test path of document 
-        // private string FileName = string.Empty;
+       
 
         private static string fileName = @"C:\temp\test.docx";
-
-
-        private GetWordPlainText getWordPlainText;
-
+        
         /// <summary> 
         ///  Initialize the WordPlainTextManager instance 
         /// </summary> 
@@ -44,173 +41,140 @@ namespace DocxEmailToWordPress
             }
 
             this.package = WordprocessingDocument.Open(filepath, true);
-        } 
-    
+        }
+
         /// <summary> 
         ///  Read Word Document 
         /// </summary> 
-        /// <returns>Plain Text in document </returns> 
-        public string ReadWordDocument()
+        /// <returns>Return Dictionary of schools and hours</returns> 
+        /// 
+        List<String> schoolsList = new List<string>();
+        List<Double> HoursList = new List<Double>();
+        Dictionary<String, Double> dic = new Dictionary<string, double>();
+
+
+        public Dictionary<String, double> ReadWordDocument()
         {
-            StringBuilder sb = new StringBuilder();
+            
             OpenXmlElement element = package.MainDocumentPart.Document.Body;
+
+            // make a copy to the only node we need to access 
+            // this is the main table that contains the schools names and hours, it is table index 1
             OpenXmlElement ClonedNode = (OpenXmlElement)element.Elements<Table>().ElementAt(1).CloneNode(true);
 
+            // set the elemnts to table row index 1, this is the middle row in the table
             OpenXmlElement row = ClonedNode.Elements<TableRow>().ElementAt(1);
-            TableCell cell = row.Elements<TableCell>().ElementAt(1);
 
-            if (element == null)
+            // set the elements to cell index 0 this contains the school names
+            TableCell cell0 = row.Elements<TableCell>().ElementAt(0);
+
+            // set the elements to cell index 1 this contains the school hours
+            TableCell cell1 = row.Elements<TableCell>().ElementAt(1);
+
+
+            // call the GetPlainText method for cell index 0, this will create a list of the schools
+            GetPlainText(cell0, 0);
+
+            // call the GetPlainText method for cell index 1, this will create a list of the school hours
+            GetPlainText(cell1, 1);
+
+            // 
+            // if the lists dont match write to to logfile and exit.
+            // if both list have the same amount of elements then assume the data is correct
+            // and merge lists into a dictionary with school name as key can hours as value. 
+
+            if (schoolsList.Count != HoursList.Count)
             {
-                return string.Empty;
+                Console.Write("something Went Wrong the lists arent even");
+
+            } else
+            {
+                dic = schoolsList.Zip(HoursList, (k, v) => new { k, v })
+              .ToDictionary(x => x.k, x => x.v );
             }
-            
 
-            sb.Append(GetPlainText(cell));
-            return sb.ToString();
+
+            return dic;
         }
 
 
         /// <summary> 
-        ///  Read Plain Text in all XmlElements of word document 
+        ///  Read Plain Text in selected XmlElements of word document
+        ///  Adds each line of the schools name and hours to a list.
         /// </summary> 
-        /// <param name="element">XmlElement in document</param> 
-        /// <returns>Plain Text in XmlElement</returns> 
+        /// <param name="element">XmlElement in document</param>
+        /// <param name="cell">Cell Element Index</param>
+        ///  
         /// 
-        StringBuilder PlainTextInWord = new StringBuilder();
-        List<String> schoolsList = new List<string>();
-
-        public string GetPlainText(OpenXmlElement element)
-        {
-            
-            foreach (OpenXmlElement item in element.Elements())
-               {
-
-                //  PlainTextInWord.Append(GetElement(item));
-                var returnedElement = GetElement(item);
-
-                if (returnedElement != null)
-                {
-                    schoolsList.Add(returnedElement);
-                }
-
-              
-
-            } // end for loop
-             
-
-            return schoolsList.
-
-        }
-
-        /// <summary> 
-        ///  Save the text to text file 
-        /// </summary> 
-
-        public String GetElement(OpenXmlElement element)
-        {
-            switch (element.LocalName)
-            {
-                // Text 
-                case "t":
-                    Console.WriteLine(element.InnerText);
-                    return element.InnerText;
-                
-                case "cr":                          // Carriage return 
-                case "br":                          // Page break 
-                    
-                    break;
-
-
-                // Tab 
-                case "tab":
-                    
-                    break;
-
-
-                // Paragraph 
-                case "p":
-                  GetPlainText(element);
-                    
-                    break;
-
-                
-                    
-
-                default:
-                    GetPlainText(element);
-                    break;
-
-            } //end of switch
-
-            return null;
-
-
-        }
         
 
-
-        public void saveToTxtTest()
+        public void GetPlainText(OpenXmlElement element, int cell)
         {
-
-            /// <summary> 
-            /// Get Plain Text from Word file 
-          
-           
-                try
-                {
-                    
-                    saveAsTxtFile(ReadWordDocument());
+            
+            // Emumerates each element of the cell 
+            foreach (OpenXmlElement item in element.Elements())
+               {
                 
-                }
-                catch (Exception ex)
+                // test switch based on elements local name
+                switch (item.LocalName)
                 {
+                    // Text 
+                    case "t":
+                        Console.WriteLine(item.InnerText);
+                        // check which cell, if cell index 0 add to schools list.
+                        if (cell == 0)
+                        {
+                            schoolsList.Add(item.InnerText);
+                        } else
+                        {
+                            // convert string to double, if the parse fails nothing added.
+                         var t = Double.TryParse(item.InnerText, out double d);
+                            if(t == true) {
+                                HoursList.Add(d);
+                            }
+                            
+                        }
+                        break;
 
-                Console.WriteLine(ex.Message + "error");
+                    case "cr":                          // Carriage return 
+                    case "br":                          // Page break 
+
+                        break;
+
+
+                    // Tab 
+                    case "tab":
+
+                        break;
+
+
+                    // Paragraph 
+                    case "p":
+                        //call back method if paragraph is reached, continuing Emumeration .
+                        GetPlainText(item, cell);
+
+                        break;
+
+
+
+
+                    default:
+                        // no match, callback method and continue Emumeration
+                        GetPlainText(item, cell);
+                        break;
+
+                } //end of switch
 
                 
-                }
-                finally
-                {
-                    if (getWordPlainText != null)
-                    {
-                        getWordPlainText.Dispose();
-                    }
-                }
-            }
-
-       
-    
-
-    public void saveAsTxtFile(string txt) {
-
-            string path = @"c:\temp\MyTest.txt";
-            string createText = txt;
-
-            // This text is added only once to the file.
-            if (!File.Exists(path))
-            {
-                // Create a file to write to.
-                
-                File.WriteAllText(path, createText);
-            } else {
-
-                // delete old file and create new one.
-
-                File.Delete(path);
-                File.WriteAllText(path, createText);
 
 
-            }
+            } // end loop
 
-           
+            
 
-            // Open the file to read from.
-            string readText = File.ReadAllText(path);
-            Console.WriteLine(readText);
+        } // end get plain text
 
-
-
-        }
+        
 
         #region IDisposable interface  
 

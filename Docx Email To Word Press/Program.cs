@@ -26,7 +26,7 @@ namespace DocxEmailToWordPress
 
             GetWordPlainText getWordPlainText = new GetWordPlainText(fileName);
 
-            getWordPlainText.saveToTxtTest();
+            getWordPlainText.ReadWordDocument();
 
         }
     }
