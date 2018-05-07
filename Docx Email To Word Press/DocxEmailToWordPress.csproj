@@ -120,7 +120,7 @@
     <Compile Include="DocxToString.cs" />
     <Compile Include="EmailDownloader.cs" />
     <Compile Include="GetWordPlainText.cs" />
-    <Compile Include="PostData.cs" />
+    <Compile Include="JsonData.cs" />
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>
     </Compile>

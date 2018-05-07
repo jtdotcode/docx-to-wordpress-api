@@ -25,8 +25,12 @@ namespace DocxEmailToWordPress
             //ServiceBase.Run(ServicesToRun);
 
             GetWordPlainText getWordPlainText = new GetWordPlainText(fileName);
+            JsonData jsonData = new JsonData();
 
-            getWordPlainText.ReadWordDocument();
+            var dic = getWordPlainText.ReadWordDocument();
+
+            jsonData.BuildHtmlTable(dic);
+
 
         }
     }

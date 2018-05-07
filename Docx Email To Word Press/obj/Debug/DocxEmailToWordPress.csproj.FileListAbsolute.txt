@@ -29,3 +29,4 @@ C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CoreCompileInputs.cache
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx Email To Word Press.exe
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx Email To Word Press.pdb
+C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\RestSharp.dll
