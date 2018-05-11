@@ -12,37 +12,14 @@ using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace DocxEmailToWordPress
 {
-    class GetWordPlainText : IDisposable
+    class GetWordHtml : IDisposable
     {
         // Specify whether the instance is disposed. 
         private bool disposed = false;
         
         // The word package 
         private WordprocessingDocument package = null;
-
-        /// <summary> 
-        ///  Get the file name 
-        /// </summary> 
-        /// test path of document 
-       
-
-        private static string fileName = @"C:\temp\test.docx";
         
-        /// <summary> 
-        ///  Initialize the WordPlainTextManager instance 
-        /// </summary> 
-        /// <param name="filepath"></param> 
-        public GetWordPlainText(string filepath)
-        {
-
-            if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
-            {
-                throw new Exception("The file is invalid. Please select an existing file again");
-            }
-
-            this.package = WordprocessingDocument.Open(filepath, true);
-        }
-
         /// <summary> 
         ///  Read Word Document 
         /// </summary> 
@@ -53,9 +30,16 @@ namespace DocxEmailToWordPress
         Dictionary<String, Double> dic = new Dictionary<string, double>();
 
 
-        public Dictionary<String, double> ReadWordDocument()
+        public String ReadWordDocument(String filepath)
         {
-            
+            if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath))
+            {
+                throw new Exception("The file is invalid. Please select an existing file again");
+            }
+
+            this.package = WordprocessingDocument.Open(filepath, true);
+
+
             OpenXmlElement element = package.MainDocumentPart.Document.Body;
 
             // make a copy to the only node we need to access 
@@ -93,8 +77,9 @@ namespace DocxEmailToWordPress
               .ToDictionary(x => x.k, x => x.v );
             }
 
+            var htmltable = GetHtmlData(dic);
 
-            return dic;
+            return htmltable;
         }
 
 
@@ -108,7 +93,7 @@ namespace DocxEmailToWordPress
         /// 
         
 
-        public void GetPlainText(OpenXmlElement element, int cell)
+        private void GetPlainText(OpenXmlElement element, int cell)
         {
             
             // Emumerates each element of the cell 
@@ -174,7 +159,50 @@ namespace DocxEmailToWordPress
 
         } // end get plain text
 
-        
+        private String GetHtmlData(Dictionary<String, Double> dictionary)
+        {
+
+            StringBuilder sbHours = new StringBuilder();
+            StringBuilder sbSchools = new StringBuilder();
+            Double totalHours = 0.0;
+
+            foreach (var item in dictionary)
+            {
+                var x = item.Value;
+                totalHours = x + totalHours;
+
+                try
+                {
+                    sbSchools.Append(item.Key.ToString());
+                    sbSchools.Append("<br />");
+
+                    sbHours.Append(item.Value.ToString());
+                    sbHours.Append("<br />");
+
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+
+
+            }
+
+            String schools = sbSchools.ToString();
+            String hours = sbHours.ToString();
+            String totalHoursString = totalHours.ToString();
+
+
+
+            String htmltable = $"<table border=\\\"1\\\" cellspacing=\\\"0\\\" cellpadding=\\\"0\\\" width=\\\"638\\\"><tr><td width=\\\"508\\\"><h3><strong>School Name<\\/strong><\\/h1><\\/td><td width=\\\"130\\\"><h3 align=\\\"center\\\"><strong>Hours<br />(Per Week)<\\/strong><\\/h3><\\/td><\\/tr><tr><td width=\\\"508\\\" valign=\\\"top\\\"><p>{schools}<br /><\\/td><td width =\\\"130\\\" valign=\\\"top\\\"><p align=\\\"center\\\">{hours}<br /><\\/td><\\/tr><tr><td width=\\\"508\\\"><p align=\\\"right\\\"><strong>Total Per Week<\\/strong><\\/p><\\/td><td width=\\\"130\\\"><p align=\\\"center\\\"><strong>{totalHoursString}<\\/strong><strong> <\\/strong><\\/p><\\/td><\\/tr><\\/table>";
+
+            Console.WriteLine(htmltable);
+
+            return htmltable;
+
+        }
 
         #region IDisposable interface  
 

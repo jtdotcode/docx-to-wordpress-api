@@ -14,59 +14,43 @@ namespace DocxEmailToWordPress
 {
     class WordPressApi
     {
-        //const string BaseUrl = "***REMOVED***";
+        private const String status = "draft";
+        private const String title = "test-wordpress-api";
+        private String[] categorie = { "43" };
+        private static string fileName = @"C:\temp\test.docx";
+        GetWordHtml getWordHtml;
+        
+        private const String username = "***REMOVED***";
+        private const String password = "***REMOVED***";
 
-        //readonly string _username;
-        //readonly string _password;
-
-        //public WordPressApi(string username, string password)
-        //{
-        //    _username = username;
-        //    _password = password;
-        //}
-
-        //public T Execute<T>(RestRequest request) where T : new()
-        //{
-        //    var client = new RestClient();
-        //    client.BaseUrl = new System.Uri(BaseUrl);
-        //    client.Authenticator = new HttpBasicAuthenticator(_username, _password);
+       
+        public Boolean PostData(String content)
+        {
+            var client = new RestClient("***REMOVED***");
+            client.Authenticator = new HttpBasicAuthenticator(username, password);
+            var jsonData = new JsonData() { Status = status,
+            Title = title,
+            Categories = categorie,
+            Content = content
+         };
             
-        //   request.AddParameter("AccountSid", _accountSid, ParameterType.UrlSegment); // used on every request
-        //    var response = client.Execute<T>(request);
 
-        //    if (response.ErrorException != null)
-        //    {
-        //        const string message = "Error retrieving response.  Check inner details for more info.";
-        //        var WpApiException = new ApplicationException(message, response.ErrorException);
-        //        throw WpApiException;
-        //    }
-        //    return response.Data;
-        //}
+            
+
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Postman-Token", "21d4bc9a-f980-404f-9667-1205061e76a0");
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Authorization", "Basic am9obkBpb2l0LmNvbS5hdTpIYXNoQ2F0VGhpczE3Iw==");
+            request.AddHeader("Content-Type", "application/json");
+           
+            IRestResponse response = client.Execute(request);
 
 
-        //public JsonData Post(JsonData options)
-        //{
-        //    Require.Argument("Title", options.Title);
-        //    Require.Argument("Status", options.Status);
-        //    Require.Argument("Url", options.Url);
-
-        //    var request = new RestRequest(Method.POST);
-        //    request.Resource = "Accounts/{AccountSid}/Calls";
-        //    request.RootElement = "Calls";
-
-        //    request.AddParameter("Caller", options.Caller);
-        //    request.AddParameter("Called", options.Called);
-        //    request.AddParameter("Url", options.Url);
-
-        //    if (options.Method.HasValue) request.AddParameter("Method", options.Method);
-        //    if (options.SendDigits.HasValue()) request.AddParameter("SendDigits", options.SendDigits);
-        //    if (options.IfMachine.HasValue) request.AddParameter("IfMachine", options.IfMachine.Value);
-        //    if (options.Timeout.HasValue) request.AddParameter("Timeout", options.Timeout.Value);
-
-        //    return Execute<JsonData>(request);
+            return true;
         }
 
 
     }
+}
 
 
