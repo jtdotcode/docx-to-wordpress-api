@@ -15,36 +15,37 @@ namespace DocxEmailToWordPress
     class WordPressApi
     {
         private const String status = "draft";
-        private const String title = "test-wordpress-api";
+        // private const String title = "test-wordpress-api7";
         private String[] categorie = { "43" };
-        private static string fileName = @"C:\temp\test.docx";
-        GetWordHtml getWordHtml;
         
         private const String username = "***REMOVED***";
         private const String password = "***REMOVED***";
 
        
-        public Boolean PostData(String content)
+        public Boolean PostData(String contents, String title)
         {
             var client = new RestClient("***REMOVED***");
             client.Authenticator = new HttpBasicAuthenticator(username, password);
-            var jsonData = new JsonData() { Status = status,
-            Title = title,
-            Categories = categorie,
-            Content = content
-         };
+           
+        
             
 
             
 
             var request = new RestRequest(Method.POST);
-            request.AddHeader("Postman-Token", "21d4bc9a-f980-404f-9667-1205061e76a0");
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", "Basic am9obkBpb2l0LmNvbS5hdTpIYXNoQ2F0VGhpczE3Iw==");
             request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(new JsonData
+            {
+                status = status,
+                title = title,
+                categories = categorie,
+                content = contents,
+                excerpt = "null!"
+            });
            
             IRestResponse response = client.Execute(request);
 
+            Console.WriteLine(response);
 
             return true;
         }

@@ -24,10 +24,11 @@ namespace DocxEmailToWordPress
             //};
             //ServiceBase.Run(ServicesToRun);
 
-            
-            JsonData jsonData = new JsonData();
 
-            
+            WordPressApi wordPressApi = new WordPressApi();
+            GetWordHtml getWordHtml = new GetWordHtml();
+
+            wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
 
 
            // jsonData.GetHtmlData(dic);

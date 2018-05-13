@@ -109,9 +109,9 @@ namespace DocxEmailToWordPress
                                 Console.WriteLine("Local file is: " + localFileSize);
                                 Console.WriteLine("Attachment size is: " + msgAttachmentFileSize);
                                 var htmldata = getWordHtml.ReadWordDocument("c:\\emails\\" + ado.FileName);
-                                var posted = wordPressApi.PostData(htmldata);
+                               var posted = wordPressApi.PostData(htmldata, "test");
 
-                                if (posted)
+                               if (posted)
                                 {
                                     Console.WriteLine("Successfully Posted");
                                     String successSubject = $"Message from + {msg.Headers.From.Address} Post Success";

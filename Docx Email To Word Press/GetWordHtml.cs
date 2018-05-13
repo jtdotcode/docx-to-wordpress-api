@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
@@ -28,6 +29,7 @@ namespace DocxEmailToWordPress
         List<String> schoolsList = new List<string>();
         List<Double> HoursList = new List<Double>();
         Dictionary<String, Double> dic = new Dictionary<string, double>();
+        String multiTitle = "Multiple Schools";
 
 
         public String ReadWordDocument(String filepath)
@@ -194,14 +196,31 @@ namespace DocxEmailToWordPress
             String hours = sbHours.ToString();
             String totalHoursString = totalHours.ToString();
 
+            HtmlString htmlString = new HtmlString($"<table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table>");
 
 
-            String htmltable = $"<table border=\\\"1\\\" cellspacing=\\\"0\\\" cellpadding=\\\"0\\\" width=\\\"638\\\"><tr><td width=\\\"508\\\"><h3><strong>School Name<\\/strong><\\/h1><\\/td><td width=\\\"130\\\"><h3 align=\\\"center\\\"><strong>Hours<br />(Per Week)<\\/strong><\\/h3><\\/td><\\/tr><tr><td width=\\\"508\\\" valign=\\\"top\\\"><p>{schools}<br /><\\/td><td width =\\\"130\\\" valign=\\\"top\\\"><p align=\\\"center\\\">{hours}<br /><\\/td><\\/tr><tr><td width=\\\"508\\\"><p align=\\\"right\\\"><strong>Total Per Week<\\/strong><\\/p><\\/td><td width=\\\"130\\\"><p align=\\\"center\\\"><strong>{totalHoursString}<\\/strong><strong> <\\/strong><\\/p><\\/td><\\/tr><\\/table>";
+            Console.WriteLine(htmlString.ToString());
 
-            Console.WriteLine(htmltable);
+            return htmlString.ToString();
 
-            return htmltable;
+        }
 
+
+        public String GetTitle()
+        {
+
+            if(dic.Count == 1)
+            {
+
+                var singleTitle = dic.Keys.First();
+
+                return singleTitle.ToString();
+            } else
+            {
+                return multiTitle;
+            }
+
+          
         }
 
         #region IDisposable interface  

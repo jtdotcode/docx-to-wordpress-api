@@ -12,19 +12,20 @@ namespace DocxEmailToWordPress
     {
 
 
-        public String Title { get; set; }
-        public String Status { get; set; }
-        
-        public String Excerpt { get; set; }
-        public String[] Categories { get; set; }
-
-        public String Content { get; set; }
-
+        public String title { get; set; }
+        public String status { get; set; }
+        public String content { get; set; }
+        public String excerpt { get; set; }
+        public String[] categories { get; set; }
 
         
-
-    
         
+
+
+
+
+
+
 
 
     }
