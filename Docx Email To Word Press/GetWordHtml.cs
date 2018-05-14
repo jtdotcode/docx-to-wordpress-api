@@ -30,7 +30,9 @@ namespace DocxEmailToWordPress
         List<Double> HoursList = new List<Double>();
         Dictionary<String, Double> dic = new Dictionary<string, double>();
         String multiTitle = "Multiple Schools";
-
+        StringBuilder closingDate = new StringBuilder();
+        String[] searchString = { "Monday,", "Tuesday,", "Wednesday,", "Thursday,", "Friday,", "Saturday,",  "Sunday,", "PM" };
+        String lastItem = string.Empty;
 
         public String ReadWordDocument(String filepath)
         {
@@ -57,12 +59,19 @@ namespace DocxEmailToWordPress
             // set the elements to cell index 1 this contains the school hours
             TableCell cell1 = row.Elements<TableCell>().ElementAt(1);
 
+            // whole document
+            OpenXmlElement wholeDocument = element;
 
             // call the GetPlainText method for cell index 0, this will create a list of the schools
             GetPlainText(cell0, 0);
 
             // call the GetPlainText method for cell index 1, this will create a list of the school hours
             GetPlainText(cell1, 1);
+
+            // search whole document 
+            GetPlainText(wholeDocument, 2);
+
+            Console.Write(closingDate.ToString());
 
             // 
             // if the lists dont match write to to logfile and exit.
@@ -101,34 +110,56 @@ namespace DocxEmailToWordPress
             // Emumerates each element of the cell 
             foreach (OpenXmlElement item in element.Elements())
                {
-                
+
                 // test switch based on elements local name
                 switch (item.LocalName)
                 {
                     // Text 
                     case "t":
-                        Console.WriteLine(item.InnerText);
+                       
                         // check which cell, if cell index 0 add to schools list.
                         if (cell == 0)
                         {
                             schoolsList.Add(item.InnerText);
-                        } else
+                        } else if (cell == 1)
                         {
                             // convert string to double, if the parse fails nothing added.
-                         var t = Double.TryParse(item.InnerText, out double d);
-                            if(t == true) {
+                            var t = Double.TryParse(item.InnerText, out double d);
+                            if (t == true) {
                                 HoursList.Add(d);
                             }
-                            
+
                         }
+
+                        // bad solution need better opions, but mah
+                        if (cell == 2)
+                        {
+
+                            // check for closing date by checking for each day of the week.
+                            foreach (var s in searchString)
+                            {
+                                if (item.InnerText.Contains(s))
+                                {
+
+                                    closingDate.Append(item.InnerText);
+                                    closingDate.Append(" - ");
+
+                                    
+
+                                }
+                                
+                                
+                            }
+                        }
+                      
+
                         break;
 
                     case "cr":                          // Carriage return 
                     case "br":                          // Page break 
 
                         break;
-
-
+                        
                     // Tab 
                     case "tab":
 
@@ -141,8 +172,6 @@ namespace DocxEmailToWordPress
                         GetPlainText(item, cell);
 
                         break;
-
-
 
 
                     default:

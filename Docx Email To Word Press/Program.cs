@@ -28,8 +28,9 @@ namespace DocxEmailToWordPress
             WordPressApi wordPressApi = new WordPressApi();
             GetWordHtml getWordHtml = new GetWordHtml();
 
-            wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
+            // wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
 
+            getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx");
 
            // jsonData.GetHtmlData(dic);
 
