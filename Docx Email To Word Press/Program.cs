@@ -13,7 +13,7 @@ namespace DocxEmailToWordPress
         /// The main entry point for the application.
         /// </summary>
         /// 
-        private static string  fileName = @"C:\temp\test.docx";
+        
 
         static void Main()
         {
@@ -24,12 +24,16 @@ namespace DocxEmailToWordPress
             //};
             //ServiceBase.Run(ServicesToRun);
 
-            GetWordPlainText getWordPlainText = new GetWordPlainText(fileName);
-            JsonData jsonData = new JsonData();
 
-            var dic = getWordPlainText.ReadWordDocument();
+            WordPressApi wordPressApi = new WordPressApi();
+            GetWordHtml getWordHtml = new GetWordHtml();
 
-            jsonData.BuildHtmlTable(dic);
+            // wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
+
+            getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx");
+
+           // jsonData.GetHtmlData(dic);
+
 
 
         }

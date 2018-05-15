@@ -6,21 +6,11 @@ using System.Threading.Tasks;
 
 namespace DocxEmailToWordPress
 {
-    class DocxToString
+    class ValidationResponse
     {
-
-        public object AsyncRecognize(string filePath)
-        {
-           
-
-
-
-
-
-
-
-            return 0;
-        }
-
+        
+            public bool Successful { get; set; }
+            public string Information { get; set; }
+       
     }
 }

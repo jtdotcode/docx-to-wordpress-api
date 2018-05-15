@@ -11,23 +11,31 @@ namespace DocxEmailToWordPress
 {
     class EmailDownloader
     {
-        // WpAPI wpAPI = new WpAPI();
-        DocxToString docxToString = new DocxToString();
+        static String errorTo = "***REMOVED***";
+        static String errorFrom = "***REMOVED***";
+        static String smtpHost = "***REMOVED***";
+        static String tssAddress = "tss@edumail.vic.edu.au";
+        static String testAddress = "***REMOVED***";
+
+        WordPressApi wordPressApi = new WordPressApi();
+        GetWordHtml getWordHtml = new GetWordHtml();
+        SendEmail sendEmail = new SendEmail(errorTo, errorFrom, smtpHost);
 
 
-        Int64 epochLastSent { set; get; }
+        Int64 EpochLastSent { set; get; }
 
         // email settings 
         public String hostname = "pop.gmail.com";
         public Int32 port = 993;
         public bool SSL = true;
-        private String userName = "test";
-        private String passWord = "test";
-
+        private String userName = "***REMOVED***";
+        private String passWord = "***REMOVED***";
+       
 
         public EmailDownloader()
         {
-            epochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            EpochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+
             Console.WriteLine("in constuctor");
         }
 
@@ -70,7 +78,16 @@ namespace DocxEmailToWordPress
                     List<Message> allMessages = new List<Message>(messageCount);
                     for (int i = messageCount; i > 0; i--)
                     {
-                        allMessages.Add(client.GetMessage(i));
+                        if (!(client.GetMessage(i).Headers.From.Address != tssAddress || client.GetMessage(i).Headers.From.Address != testAddress))
+                        {
+                            client.DeleteMessage(i);
+                            Console.Write("Deleted" + client.GetMessage(i).Headers.From.Address);
+
+                        } else
+                        {
+                            allMessages.Add(client.GetMessage(i));
+                        }
+                        
 
                     }
                     foreach (Message msg in allMessages)
@@ -81,9 +98,9 @@ namespace DocxEmailToWordPress
                         {
                             Int64 msgAttachmentFileSize = ado.Body.Length;
 
-                            ado.Save(new System.IO.FileInfo(System.IO.Path.Combine("c:\\temp", ado.FileName)));
+                            ado.Save(new System.IO.FileInfo(System.IO.Path.Combine("c:\\emails", ado.FileName)));
 
-                            Int64 localFileSize = new System.IO.FileInfo(System.IO.Path.Combine("c:\\temp", ado.FileName)).Length;
+                            Int64 localFileSize = new System.IO.FileInfo(System.IO.Path.Combine("c:\\emails", ado.FileName)).Length;
 
 
                             if (localFileSize == msgAttachmentFileSize)
@@ -91,9 +108,30 @@ namespace DocxEmailToWordPress
 
                                 Console.WriteLine("Local file is: " + localFileSize);
                                 Console.WriteLine("Attachment size is: " + msgAttachmentFileSize);
+                                var htmldata = getWordHtml.ReadWordDocument("c:\\emails\\" + ado.FileName);
+                               var posted = wordPressApi.PostData(htmldata, "test");
 
-                                //var body = audioToText.AsyncRecognize("c:\\temp\\" + ado.FileName);
-                                //sendMail.Send(xmlsettings.ToEmail, msg.Headers.From.Address, "message from:" + msg.Headers.From.Address, body.ToString());
+                               if (posted)
+                                {
+                                    Console.WriteLine("Successfully Posted");
+                                    String successSubject = $"Message from + {msg.Headers.From.Address} Post Success";
+                                    sendEmail.Send(successSubject, htmldata);
+                                }
+                                else
+                                {
+                                    String messageFrom = "message from:" + msg.Headers.From.Address;
+                                    String messageSubject = msg.Headers.Subject;
+                                    String errorBody = $"This message is from {messageFrom}";
+                                    String errorSubject = $"Something went wrong {messageFrom} + {messageSubject}";
+                                    
+                                    Console.WriteLine("Something Went Wrong");
+                                    sendEmail.Send(errorSubject, errorBody);
+
+                                }
+
+
+
+
 
 
                             }
@@ -137,12 +175,12 @@ namespace DocxEmailToWordPress
             {
                 Int64 epochCurrentTime = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-                long timeElapsed = epochCurrentTime - epochLastSent;
+                long timeElapsed = epochCurrentTime - EpochLastSent;
 
 
                 Console.WriteLine("this is the current time: " + epochCurrentTime);
 
-                Console.WriteLine("this is the lastSent: " + epochLastSent);
+                Console.WriteLine("this is the lastSent: " + EpochLastSent);
 
                 Console.WriteLine("this many secs have Elapsed: " + timeElapsed);
 
@@ -155,7 +193,7 @@ namespace DocxEmailToWordPress
 
                     Console.WriteLine("sending");
 
-                    epochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    EpochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
 
 
