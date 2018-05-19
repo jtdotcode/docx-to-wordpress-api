@@ -16,12 +16,13 @@ namespace DocxEmailToWordPress
         static String errorFrom = "***REMOVED***";
         static String smtpHost = "***REMOVED***";
         static String tssAddress = "***REMOVED***";
-        static String testAddress = "***REMOVED***";
+        
 
         WordPressApi wordPressApi = new WordPressApi();
         GetWordHtml getWordHtml = new GetWordHtml();
         SendEmail sendEmail = new SendEmail(errorTo, errorFrom, smtpHost);
         String fileExtension = ".docx";
+        String tmpFolderPath = "c:\\emails\\";
 
         Int64 EpochLastSent { set; get; }
 
@@ -95,14 +96,17 @@ namespace DocxEmailToWordPress
                     List<Message> allMessages = new List<Message>(messageCount);
                     for (int i = messageCount; i > 0; i--)
                     {
-                        if (!(client.GetMessage(i).Headers.From.Address != tssAddress || client.GetMessage(i).Headers.From.Address != testAddress))
+                        if (client.GetMessage(i).Headers.From.Address == tssAddress)
                         {
-                            client.DeleteMessage(i);
-                            Console.Write("Deleted" + client.GetMessage(i).Headers.From.Address);
+                            allMessages.Add(client.GetMessage(i));
 
                         } else
                         {
-                            allMessages.Add(client.GetMessage(i));
+                            var subject = client.GetMessage(i).Headers.Subject;
+                            var from = client.GetMessage(i).Headers.From;
+                            client.DeleteMessage(i);
+                            Console.Write("Deleted" + subject + "From " + from);
+                            
                         }
                         
 
@@ -115,10 +119,11 @@ namespace DocxEmailToWordPress
                         {
                             Int64 msgAttachmentFileSize = attachment.Body.Length;
 
-                            
-                            attachment.Save(new System.IO.FileInfo(System.IO.Path.Combine("c:\\emails", attachment.FileName)));
+                            var filePath = tmpFolderPath + attachment.FileName;
 
-                            Int64 localFileSize = new System.IO.FileInfo(System.IO.Path.Combine("c:\\emails", attachment.FileName)).Length;
+                            attachment.Save(new System.IO.FileInfo(System.IO.Path.Combine(tmpFolderPath, attachment.FileName)));
+
+                            Int64 localFileSize = new System.IO.FileInfo(System.IO.Path.Combine(tmpFolderPath, attachment.FileName)).Length;
 
 
                             if (localFileSize == msgAttachmentFileSize)
@@ -126,26 +131,47 @@ namespace DocxEmailToWordPress
 
                                 Console.WriteLine("Local file is: " + localFileSize);
                                 Console.WriteLine("Attachment size is: " + msgAttachmentFileSize);
-                                var e = Path.GetExtension("c:\\emails\\" + attachment.FileName);
+                                var e = Path.GetExtension(filePath);
                                 var posted = false;
 
                                 if (e == fileExtension)
                                 {
-                                    var htmldata = getWordHtml.ReadWordDocument("c:\\emails\\" + attachment.FileName);
+                                    var htmldata = getWordHtml.ReadWordDocument(filePath);
 
-                                    posted = true;
-                                    // = wordPressApi.PostData(htmldata, "test");
+                                    posted = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
+                                    var from = message.Headers.From.Address;
+                                    var subject = message.Headers.Subject;
+
+                                    if (posted)
+                                    {
+                                        String successSubject = $"Message from {from} {subject} Post Success";
+                                        Console.WriteLine(successSubject);
+                                        
+                                        // sendEmail.Send(successSubject, htmldata);
+                                    }
+                                    else
+                                    {
+                                        
+                                        String errorBody = $"This message is from {from}";
+                                        String errorSubject = $"Something went wrong {subject} {from}";
+
+                                        Console.WriteLine("Something Went Wrong"  + errorSubject);
+                                        //  sendEmail.Send(errorSubject, errorBody);
+
+                                    }
+
+
                                 }
                                 else
                                 {
                                     try
                                     {
-                                        File.Delete("c:\\emails\\" + attachment.FileName);
-                                        Console.WriteLine("Deleted " + attachment.FileName);
+                                        File.Delete(filePath);
+                                        Console.WriteLine("Deleted " + filePath);
                                     }
                                     catch (Exception ex)
                                     {
-                                        Console.WriteLine("Error unable to delete " + attachment.FileName);
+                                        Console.WriteLine("Error unable to delete " + filePath);
                                         Console.WriteLine(ex);
                                     }
                                     
@@ -153,23 +179,7 @@ namespace DocxEmailToWordPress
 
 
 
-                                if (posted)
-                                {
-                                    Console.WriteLine("Successfully Posted");
-                                    String successSubject = $"Message from + {message.Headers.From.Address} Post Success";
-                               //     sendEmail.Send(successSubject, htmldata);
-                                }
-                                else
-                                {
-                                    String messageFrom = "message from:" + message.Headers.From.Address;
-                                    String messageSubject = message.Headers.Subject;
-                                    String errorBody = $"This message is from {messageFrom}";
-                                    String errorSubject = $"Something went wrong {messageFrom} + {messageSubject}";
-                                    
-                                    Console.WriteLine("Something Went Wrong");
-                                  //  sendEmail.Send(errorSubject, errorBody);
-
-                                }
+                                
 
 
 

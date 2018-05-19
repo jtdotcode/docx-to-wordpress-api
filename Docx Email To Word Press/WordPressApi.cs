@@ -17,20 +17,19 @@ namespace DocxEmailToWordPress
         private const String status = "draft";
         // private const String title = "test-wordpress-api7";
         private String[] categorie = { "43" };
-        
+        private const String WpApiUrl = "***REMOVED***";
+
         private const String username = "***REMOVED***";
         private const String password = "***REMOVED***";
 
        
         public Boolean PostData(String contents, String title)
         {
-            var client = new RestClient("***REMOVED***");
-            client.Authenticator = new HttpBasicAuthenticator(username, password);
-           
-        
             
 
-            
+            var client = new RestClient(WpApiUrl);
+            client.Authenticator = new HttpBasicAuthenticator(username, password);
+           
 
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
@@ -45,9 +44,10 @@ namespace DocxEmailToWordPress
            
             IRestResponse response = client.Execute(request);
 
-            Console.WriteLine(response);
 
-            return true;
+            
+
+            return response.IsSuccessful;
         }
 
 
