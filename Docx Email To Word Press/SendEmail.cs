@@ -29,8 +29,7 @@ namespace DocxEmailToWordPress
             public Boolean Send(string subject, string body)
             {
                 SmtpClient smtpClient = new SmtpClient();
-                NetworkCredential basicCredential =
-                    new NetworkCredential(username, Password);
+                NetworkCredential basicCredential = new NetworkCredential(username, Password);
                 MailMessage message = new MailMessage();
                 MailAddress fromAddress = new MailAddress(_errorFrom);
 

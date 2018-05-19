@@ -21,12 +21,5 @@ namespace DocxEmailToWordPress
         
         
 
-
-
-
-
-
-
-
     }
 }

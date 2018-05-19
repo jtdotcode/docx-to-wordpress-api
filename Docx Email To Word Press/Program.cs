@@ -27,13 +27,25 @@ namespace DocxEmailToWordPress
 
             WordPressApi wordPressApi = new WordPressApi();
             GetWordHtml getWordHtml = new GetWordHtml();
+            EmailDownloader emailDownloader = new EmailDownloader();
 
             // wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
 
-            getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx");
+            // getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx");
 
-           // jsonData.GetHtmlData(dic);
+            // jsonData.GetHtmlData(dic);
 
+            if (emailDownloader.TestConnection())
+            {
+                Console.WriteLine("Can connect");
+                emailDownloader.DownloadAttachments();
+
+            }
+            else
+            {
+                Console.WriteLine("Something Went Wrong");
+            }
+            
 
 
         }
