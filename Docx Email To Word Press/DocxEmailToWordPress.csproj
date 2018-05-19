@@ -135,6 +135,7 @@
     <Compile Include="EmailDownloader.cs" />
     <Compile Include="GetWordHtml.cs" />
     <Compile Include="JsonData.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="SendEmail.cs" />
     <Compile Include="Service1.cs">
       <SubType>Component</SubType>

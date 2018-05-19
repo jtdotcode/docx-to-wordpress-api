@@ -23,6 +23,8 @@ namespace DocxEmailToWordPress
         SendEmail sendEmail = new SendEmail(errorTo, errorFrom, smtpHost);
         String fileExtension = ".docx";
         String tmpFolderPath = "c:\\emails\\";
+        Log log = new Log();
+        List<Log> emailLog = new List<Log>();
 
         Int64 EpochLastSent { set; get; }
 
@@ -38,7 +40,7 @@ namespace DocxEmailToWordPress
         {
             EpochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
 
-            Console.WriteLine("in constuctor");
+            
         }
 
         public bool TestConnection()
@@ -56,6 +58,7 @@ namespace DocxEmailToWordPress
                 }
                 catch (Exception ex)
                 {
+
                     Console.WriteLine(ex);
 
 
@@ -89,27 +92,44 @@ namespace DocxEmailToWordPress
                 
                 client.Connect(hostname, port, SSL);
                 client.Authenticate(username, password, AuthenticationMethod.UsernameAndPassword);
+                var messageNum = 0;
+
                 if (client.Connected)
                 {
-
+                    
                     int messageCount = client.GetMessageCount();
                     List<Message> allMessages = new List<Message>(messageCount);
                     for (int i = messageCount; i > 0; i--)
                     {
+                        // log message count
+                        
+
+
                         if (client.GetMessage(i).Headers.From.Address == tssAddress)
                         {
                             allMessages.Add(client.GetMessage(i));
 
+                            // create log with email details
+                            emailLog.Add(new Log() { Body = client.GetMessage(i).MessagePart.Body,
+                                CurrentDateTime = DateTime.Now, FromAddress = client.GetMessage(i).Headers.From.Address,
+                                Subject = client.GetMessage(i).Headers.Subject, MessageCount = emailLog.ElementAt(i).MessageCount,
+                                ToAddress = client.GetMessage(i).Headers.To.ToString()
+
+                            });
+
                         } else
                         {
                             var subject = client.GetMessage(i).Headers.Subject;
-                            var from = client.GetMessage(i).Headers.From;
+                            var from = client.GetMessage(i).Headers.From.Address;
+
                             client.DeleteMessage(i);
+
+                            emailLog.ElementAt(i).Message.Add( "Email not from " + tssAddress + " Deleting " + subject + "From " + from );
                             Console.Write("Deleted" + subject + "From " + from);
                             
                         }
-                        
 
+                        messageNum = i;
                     }
                     foreach (Message message in allMessages)
                     {
@@ -119,32 +139,41 @@ namespace DocxEmailToWordPress
                         {
                             Int64 msgAttachmentFileSize = attachment.Body.Length;
 
+                            
+
                             var filePath = tmpFolderPath + attachment.FileName;
 
                             attachment.Save(new System.IO.FileInfo(System.IO.Path.Combine(tmpFolderPath, attachment.FileName)));
 
                             Int64 localFileSize = new System.IO.FileInfo(System.IO.Path.Combine(tmpFolderPath, attachment.FileName)).Length;
 
+                            // log file name and file size
+                            emailLog.ElementAt(messageNum).Attachments.Add(attachment.FileName, msgAttachmentFileSize);
 
                             if (localFileSize == msgAttachmentFileSize)
                             {
 
                                 Console.WriteLine("Local file is: " + localFileSize);
                                 Console.WriteLine("Attachment size is: " + msgAttachmentFileSize);
-                                var e = Path.GetExtension(filePath);
+                                var exetension = Path.GetExtension(filePath);
                                 var posted = false;
 
-                                if (e == fileExtension)
+                                if (exetension == fileExtension)
                                 {
                                     var htmldata = getWordHtml.ReadWordDocument(filePath);
 
                                     posted = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
                                     var from = message.Headers.From.Address;
                                     var subject = message.Headers.Subject;
+                                    var currentTime = DateTime.Now;
 
                                     if (posted)
                                     {
+                                        // record time posted with from and subject
+                                        emailLog.ElementAt(messageNum).Message.Add($"Message from {from} {subject} Post Success - {currentTime} ");
+
                                         String successSubject = $"Message from {from} {subject} Post Success";
+
                                         Console.WriteLine(successSubject);
                                         
                                         // sendEmail.Send(successSubject, htmldata);
@@ -156,6 +185,10 @@ namespace DocxEmailToWordPress
                                         String errorSubject = $"Something went wrong {subject} {from}";
 
                                         Console.WriteLine("Something Went Wrong"  + errorSubject);
+
+                                        // log if unable to post
+                                        emailLog.ElementAt(messageNum).Message.Add($"Something went wrong {subject} {from} - {currentTime} ");
+
                                         //  sendEmail.Send(errorSubject, errorBody);
 
                                     }
@@ -167,28 +200,29 @@ namespace DocxEmailToWordPress
                                     try
                                     {
                                         File.Delete(filePath);
+
                                         Console.WriteLine("Deleted " + filePath);
+
+                                        // log deleted message
+                                        emailLog.ElementAt(messageNum).Message.Add("No Docx File Found, Deleted " + filePath + DateTime.Now);
                                     }
                                     catch (Exception ex)
                                     {
                                         Console.WriteLine("Error unable to delete " + filePath);
                                         Console.WriteLine(ex);
+
+                                        // log failed to delete 
+                                        emailLog.ElementAt(messageNum).Message.Add("Error unable to delete " + filePath + ex);
                                     }
                                     
                                 }
-
-
-
                                 
-
-
-
-
-
-
                             }
                             else
                             {
+                                // log file size mismatch
+                                emailLog.ElementAt(messageNum).Message.Add("Attachment Mismatch" + attachment.FileName + " file size should be: " + msgAttachmentFileSize + " Bytes");
+
                                 Console.WriteLine("Attachment Mismatch");
                                 Console.WriteLine("Attachment " + attachment.FileName + " file size should be: " + msgAttachmentFileSize + " Bytes");
                                 Console.WriteLine("Disk File is " + localFileSize);
