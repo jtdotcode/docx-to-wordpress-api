@@ -16,18 +16,19 @@ namespace DocxEmailToWordPress
         public string _host { set; get; }
         public string _errorTo { set; get; }
         public string _errorFrom { set; get; }
+        PostLog postLog;
 
-        public SendEmail(String errorTo, String errorFrom, String host)
+        public SendEmail(PostLog p)
         {
-            _errorTo = errorTo;
-            _errorFrom = errorFrom;
-            _host = host;
+            PostLog postLog = p;
 
         }
       
 
             public Boolean Send(string subject, string body)
             {
+
+                
                 SmtpClient smtpClient = new SmtpClient();
                 NetworkCredential basicCredential = new NetworkCredential(username, Password);
                 MailMessage message = new MailMessage();

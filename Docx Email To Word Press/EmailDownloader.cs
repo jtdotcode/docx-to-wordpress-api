@@ -23,8 +23,8 @@ namespace DocxEmailToWordPress
         SendEmail sendEmail = new SendEmail(errorTo, errorFrom, smtpHost);
         String fileExtension = ".docx";
         String tmpFolderPath = "c:\\emails\\";
-        Log log = new Log();
-        List<Log> emailLog = new List<Log>();
+        PostLog log = new PostLog();
+        List<PostLog> emailLog = new List<PostLog>();
 
         Int64 EpochLastSent { set; get; }
 
@@ -35,13 +35,6 @@ namespace DocxEmailToWordPress
         private String username = "***REMOVED***";
         private String password = "***REMOVED***";
        
-
-        public EmailDownloader()
-        {
-            EpochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-
-            
-        }
 
         public bool TestConnection()
         {
@@ -85,8 +78,10 @@ namespace DocxEmailToWordPress
 
         }
 
-        public void DownloadAttachments()
+        public Boolean DownloadAttachments()
         {
+            bool noMessages = false;
+
             using (Pop3Client client = new Pop3Client())
             {
                 
@@ -110,7 +105,7 @@ namespace DocxEmailToWordPress
                             allMessages.Add(client.GetMessage(i));
 
                             // create log with email details
-                            emailLog.Add(new Log() { Body = client.GetMessage(i).MessagePart.Body,
+                            emailLog.Add(new PostLog() { Body = client.GetMessage(i).MessagePart.Body,
                                 CurrentDateTime = DateTime.Now, FromAddress = client.GetMessage(i).Headers.From.Address,
                                 Subject = client.GetMessage(i).Headers.Subject, MessageCount = emailLog.ElementAt(i).MessageCount,
                                 ToAddress = client.GetMessage(i).Headers.To.ToString()
@@ -175,8 +170,10 @@ namespace DocxEmailToWordPress
                                         String successSubject = $"Message from {from} {subject} Post Success";
 
                                         Console.WriteLine(successSubject);
-                                        
+
                                         // sendEmail.Send(successSubject, htmldata);
+                                        
+
                                     }
                                     else
                                     {
@@ -229,10 +226,22 @@ namespace DocxEmailToWordPress
                                 Console.WriteLine("Trying to download again");
                                 DownloadAttachments();
 
+                                return false;
+
                             }
 
 
+                            if (messageCount == 0)
+                            {
 
+                                noMessages = true;
+
+
+                            } else
+                            {
+
+                                noMessages = false;
+                            }
 
 
 
@@ -241,56 +250,18 @@ namespace DocxEmailToWordPress
 
 
                     }
+
+                    
+
                 }
             }
 
-
+            return noMessages;
 
         } // end Download Attachments
 
 
-        public void CheckForNewMsg()
-        {
-
-
-
-            int freqP = 60 * 60;
-
-
-            while (true)
-            {
-                Int64 epochCurrentTime = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-
-                long timeElapsed = epochCurrentTime - EpochLastSent;
-
-
-                Console.WriteLine("this is the current time: " + epochCurrentTime);
-
-                Console.WriteLine("this is the lastSent: " + EpochLastSent);
-
-                Console.WriteLine("this many secs have Elapsed: " + timeElapsed);
-
-                if (timeElapsed >= freqP)
-                {
-
-                    // send 
-
-
-
-                    Console.WriteLine("sending");
-
-                    EpochLastSent = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-
-
-
-                } // end if
-
-
-            } //end while
-
-
-
-        } // end CheckForNewMsg 
+        
 
 
     }

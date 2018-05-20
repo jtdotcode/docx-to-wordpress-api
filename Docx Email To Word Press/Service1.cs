@@ -17,12 +17,43 @@ namespace DocxEmailToWordPress
             InitializeComponent();
         }
 
+        EmailDownloader emailDownloader;
+        public Double IntervalInSecs { get; set; }
+
         protected override void OnStart(string[] args)
         {
+            // Set up a timer to trigger every minute.  
+            System.Timers.Timer timer = new System.Timers.Timer();
+            timer.Interval = IntervalInSecs * 1000; // 60 seconds  
+            timer.Elapsed += new System.Timers.ElapsedEventHandler(this.OnTimer);
+            timer.Start();
+
+            // instantiate EmailDownloader Class
+            emailDownloader = new EmailDownloader();
+
+
+
+
         }
 
         protected override void OnStop()
         {
+
         }
+
+        public void OnTimer(object sender, System.Timers.ElapsedEventArgs args)
+        {
+            //Check Mail Every X secs
+
+            emailDownloader.DownloadAttachments();
+
+
+            // TODO: monitoring activities here.  
+
+            Console.WriteLine("Checking For New Mail");
+
+           // eventLog1.WriteEntry("Monitoring the System", EventLogEntryType.Information, eventId++);
+        }
+
     }
 }

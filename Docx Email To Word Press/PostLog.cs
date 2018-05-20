@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DocxEmailToWordPress
 {
-    class Log
+    class PostLog
     {
 
         public String FromAddress { get; set; }
