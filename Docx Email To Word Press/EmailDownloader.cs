@@ -135,7 +135,7 @@ namespace DocxEmailToWordPress
                         }
 
 
-                        //need to fix this  
+                        //need to fix this  NOT going to work.
                         messageNum = messageNum++;
 
                     }
