@@ -228,7 +228,7 @@ namespace DocxEmailToWordPress
             String totalHoursString = totalHours.ToString();
             String closingDateString = closingDate;
 
-            HtmlString htmlString = new HtmlString($"<p><strong>The closing date for this application is: {closingDateString} - 4:30PM</strong></p><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table>");
+            HtmlString htmlString = new HtmlString($"<p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table>");
 
 
             Console.WriteLine(htmlString.ToString());

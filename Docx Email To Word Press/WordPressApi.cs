@@ -23,7 +23,7 @@ namespace DocxEmailToWordPress
         private const String password = "***REMOVED***";
 
        
-        public Boolean PostData(String contents, String title)
+        public IRestResponse PostData(String contents, String title)
         {
             
 
@@ -45,9 +45,9 @@ namespace DocxEmailToWordPress
             IRestResponse response = client.Execute(request);
 
 
-            
 
-            return response.IsSuccessful;
+
+            return response;
         }
 
 
