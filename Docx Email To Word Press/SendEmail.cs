@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -72,7 +73,7 @@ namespace DocxEmailToWordPress
                 smtpClient.Port = _port;
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.EnableSsl = true;
-                smtpClient.Credentials = basicCredential;
+                // smtpClient.Credentials = basicCredential;
 
                 // Check if the bcc value is null or an empty string
                 if ((bcc != null) && (bcc != string.Empty))
@@ -102,8 +103,23 @@ namespace DocxEmailToWordPress
 
             try
                 {
-                    
-                smtpClient.Send(message);
+                var userState = "test message";
+
+
+                smtpClient.SendAsync(message, userState);
+                Console.WriteLine("Sending message..");
+
+                // smtpClient.Send(message);
+
+                //if (mailSent == false)
+                //{
+                //    smtpClient.SendAsyncCancel();
+                //}
+
+
+
+
+
                 return true;
 
                 }
@@ -131,7 +147,7 @@ namespace DocxEmailToWordPress
 
                 var postData = log.PostData;
                 var emailFrom = log.FromAddress;
-                var sentTo = log.ToAddress;
+                var sentTo = log.ToAddress.First();
                 var timeRecieved = log.TimeRecieved;
                 var subject = log.Subject;
                 var logAttachments = SbAttachments.ToString();
@@ -141,17 +157,17 @@ namespace DocxEmailToWordPress
 
                 foreach (var attachment in log.Attachments)
                 {
-                    SbAttachments.Append("<td>" + "Attechment is " + attachment.Key + "File size is: " + attachment.Value.ToString() + "</td>");
+                    SbAttachments.Append("<td>" + "Attechment is " + attachment.Key.ToString() + "File size is: " + attachment.Value.ToString() + "</td>");
 
 
                 }
 
                 foreach (var logMessage in logMessages)
                 {
-                    SbErrorMessages.Append("<td>" + logMessage + "</td>");
+                    SbErrorMessages.Append("<td>" + logMessage.ToString() + "</td>");
                 }
 
-                HtmlString html = new HtmlString($"< body >< p > &nbsp;</ p >< table width =\"680\" border=\"1\" cellpadding=\"1\"><tr><td width=\"172\">Post Data</td><td width=\"492\">{postData}</td></tr><tr><td>Email From</td><td>{emailFrom}</td></tr><tr><td height=\"33\">Sent To</td><td>{sentTo}</td></tr><tr><td>Time Recieved</td><td>{timeRecieved}</td></tr><tr><td>Subject</td><td>{subject}</td></tr><tr><td>Attactments</td><td>{logAttachments}</td></tr><tr><td>Posted?</td><td>{posted}</td></tr><tr><td>Error Messages</td><td>{logMessages}</td></tr></table><p>{htmlTable}</p><p>&nbsp;</p><p>&nbsp;</p><p>_______________________________________________________________________________________________</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></body>");
+                HtmlString html = new HtmlString($"<body><p>&nbsp;</ p><table width =\"680\" border=\"1\" cellpadding=\"1\"><tr><td width=\"172\">Post Data:</td><td width=\"492\">{postData}</td></tr><tr><td>Email From:</td><td>{emailFrom}</td></tr><tr><td height=\"33\">Sent To:</td><td>{sentTo}</td></tr><tr><td>Time Recieved:</td><td>{timeRecieved}</td></tr><tr><td>Subject:</td><td>{subject}</td></tr><tr><td>Attactments:</td><td>{logAttachments}</td></tr><tr><td>Posted?:</td><td>{posted}</td></tr><tr><td>Error Messages:</td><td>{logMessages}</td></tr></table><p>{htmlTable}</p><p>&nbsp;</p><p>&nbsp;</p><p>_______________________________________________________________________________________________</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></body>");
 
                 htmlString = html.ToString();
             }

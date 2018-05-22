@@ -13,9 +13,9 @@ namespace DocxEmailToWordPress
     class EmailDownloader
     {
         static String smtpSendTo = "***REMOVED***";
-        static String smtpSentFrom = "***REMOVED***";
-        static String smtpHost = "***REMOVED***";
-        static int smtpPort = 465;
+        static String smtpSentFrom = "***REMOVED***@vic.exemail.com.au";
+        static String smtpHost = "smtp.vic.exemail.com.au";
+        static int smtpPort = 25;
         static String tssAddress = "***REMOVED***";
         
 
