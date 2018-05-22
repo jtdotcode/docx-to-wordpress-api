@@ -31,7 +31,7 @@ namespace DocxEmailToWordPress
             // instantiate EmailDownloader Class
             emailDownloader = new EmailDownloader();
 
-
+            emailDownloader.DownloadAttachments();
 
 
         }
@@ -45,7 +45,7 @@ namespace DocxEmailToWordPress
         {
             //Check Mail Every X secs
 
-            emailDownloader.DownloadAttachments();
+         //   emailDownloader.DownloadAttachments();
 
 
             // TODO: monitoring activities here.  

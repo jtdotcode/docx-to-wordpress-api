@@ -12,15 +12,16 @@ namespace DocxEmailToWordPress
 {
     class EmailDownloader
     {
-        static String errorTo = "***REMOVED***";
-        static String errorFrom = "***REMOVED***";
+        static String smtpSendTo = "***REMOVED***";
+        static String smtpSentFrom = "***REMOVED***";
         static String smtpHost = "***REMOVED***";
+        static int smtpPort = 465;
         static String tssAddress = "***REMOVED***";
         
 
         WordPressApi wordPressApi = new WordPressApi();
         GetWordHtml getWordHtml = new GetWordHtml();
-        SendEmail sendEmail = new SendEmail(errorTo, errorFrom, smtpHost);
+        SendEmail sendEmail = new SendEmail(smtpHost, smtpSendTo, smtpSentFrom,  smtpPort);
         String fileExtension = ".docx";
         String tmpFolderPath = "c:\\emails\\";
         PostLog log = new PostLog();
@@ -115,7 +116,7 @@ namespace DocxEmailToWordPress
                             emailLog.Add(new PostLog() { Body = client.GetMessage(i).MessagePart.Body,
                                 CurrentDateTime = DateTime.Now, FromAddress = client.GetMessage(i).Headers.From.Address,
                                 Subject = client.GetMessage(i).Headers.Subject, MessageCount = messageCount,
-                                ToAddress = client.GetMessage(i).Headers.To.ToString(), TimeRecieved = client.GetMessage(i).Headers.Date
+                                ToAddress = client.GetMessage(i).Headers.To.ToString(), TimeRecieved = client.GetMessage(i).Headers.Date, Messages = new List<String>(), Attachments = new Dictionary<String, long>()
 
                             });
 
@@ -129,16 +130,18 @@ namespace DocxEmailToWordPress
                             client.DeleteMessage(i);
 
                             // add Errormessage to Messages List Array in PostData
-                            emailLog.ElementAt(i).Messages.Add( "Email not from " + tssAddress + " Deleting " + subject + "From " + from );
+                            emailLog.ElementAt(messageNum).Messages.Add( "Email not from " + tssAddress + " Deleting " + subject + "From " + from );
                             Console.Write("Deleted" + subject + "From " + from);
                             
                         }
 
 
-                        //need to fix this  NOT going to work.
+                        //need to fix this NOT going to work.
                         messageNum = messageNum++;
 
                     }
+
+                    messageNum = 0;
 
                     // enumerate each message 
                     foreach (Message message in allMessages)
@@ -190,7 +193,7 @@ namespace DocxEmailToWordPress
                                     posted = responseData.IsSuccessful;
 
                                     // update List<PostLog> element Post with the Returned Data
-                                    emailLog.ElementAt(messageCount).PostData = responseData.ErrorMessage;
+                                    emailLog.ElementAt(messageNum).PostData = responseData.ErrorMessage;
 
                                     var from = message.Headers.From.Address;
                                     var subject = message.Headers.Subject;
@@ -256,11 +259,11 @@ namespace DocxEmailToWordPress
 
 
                             // if the there is no more messages 
-                            if (messageCount == 0)
+                            if (messageCount <= 1)
                             {
 
                                 noMessages = true;
-
+                                sendEmail.Send(emailLog);
 
 
                             } else
@@ -274,12 +277,13 @@ namespace DocxEmailToWordPress
 
                         }
 
+                        messageNum++;
 
-                    }
+                    } // end foreach loop for messages
 
-                    
 
-                }
+
+                } // end check if server is connected
             }
 
             return noMessages;

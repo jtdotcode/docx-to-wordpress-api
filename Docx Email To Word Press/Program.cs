@@ -17,20 +17,20 @@ namespace DocxEmailToWordPress
 
         static void Main()
         {
-            Double timerIntervalInSecs = 60;
+            //Double timerIntervalInSecs = 60;
 
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
-            {
-                new Service1(){ IntervalInSecs = timerIntervalInSecs }
+            //ServiceBase[] ServicesToRun;
+            //ServicesToRun = new ServiceBase[]
+            //{
+            //    new Service1(){ IntervalInSecs = timerIntervalInSecs }
 
-            };
-            ServiceBase.Run(ServicesToRun);
+            //};
+            //ServiceBase.Run(ServicesToRun);
 
 
             WordPressApi wordPressApi = new WordPressApi();
             GetWordHtml getWordHtml = new GetWordHtml();
-            EmailDownloader emailDownloader = new EmailDownloader();
+            //EmailDownloader emailDownloader = new EmailDownloader();
 
             // wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
 
@@ -49,8 +49,11 @@ namespace DocxEmailToWordPress
             //    Console.WriteLine("Something Went Wrong");
             //}
 
-            
-            
+            EmailDownloader emailDownloader = new EmailDownloader();
+
+            emailDownloader.DownloadAttachments();
+
+
 
 
         }
