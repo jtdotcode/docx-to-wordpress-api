@@ -31,11 +31,6 @@ namespace DocxEmailToWordPress
 
         }
 
-        static bool mailSent = false;
-
-        
-
-
 
         public Boolean Send(List<PostLog> postLog)
             {
@@ -46,7 +41,7 @@ namespace DocxEmailToWordPress
                 MailMessage message = new MailMessage();
                 message.From = new MailAddress(_sentFrom);
                 message.To.Add(new MailAddress(_sendTo));
-                message.BodyEncoding = System.Text.Encoding.UTF8;
+                
 
                 smtpClient.Host = _smtpHost;
                 smtpClient.Port = _port;
@@ -54,7 +49,7 @@ namespace DocxEmailToWordPress
                 smtpClient.EnableSsl = true;
                 smtpClient.Credentials = basicCredential;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-                message.Sender = new MailAddress("***REMOVED***");
+               
 
             
 
@@ -86,24 +81,17 @@ namespace DocxEmailToWordPress
 
             try
                 {
+
+
                 object userState = message;
 
 
-                smtpClient.SendAsync(message, userState);
+                smtpClient.Send(message);
 
 
                 Console.WriteLine("Sending message..");
 
-                // smtpClient.Send(message);
-
-                //if (mailSent == false)
-                //{
-                //    smtpClient.SendAsyncCancel();
-                //}
-
-
-
-
+                
 
                 return true;
 
@@ -130,7 +118,7 @@ namespace DocxEmailToWordPress
             foreach (var log in p)
             {
 
-                var postData = log.PostData;
+                var postData = log.PostStatus;
                 var emailFrom = log.FromAddress;
                 var sentTo = log.ToAddress;
                 var timeRecieved = log.TimeRecieved;
@@ -143,17 +131,17 @@ namespace DocxEmailToWordPress
 
                 foreach (var attachment in log.Attachments)
                 {
-                    SbAttachments.Append("Attechment is " + attachment.Key.ToString() + "File size is: " + attachment.Value.ToString() + ", ");
+                    SbAttachments.Append("Attechment is " + attachment.Key.ToString() + "File size is: " + attachment.Value.ToString());
 
 
                 }
 
                 foreach (var logMessage in logMessages)
                 {
-                    SbErrorMessages.Append(logMessage.ToString() + ", ");
+                    SbErrorMessages.Append(logMessage.ToString());
                 }
 
-                HtmlString html = new HtmlString($"<body><p>&nbsp;</ p><table width =\"680\" border=\"1\" cellpadding=\"1\"><tr><td width=\"172\">Post Data:</td><td width=\"492\">{postData}</td></tr><tr><td>Email From:</td><td>{emailFrom}</td></tr><tr><td height=\"33\">Sent To:</td><td>{sentTo}</td></tr><tr><td>Time Recieved:</td><td>{timeRecieved}</td></tr><tr><td>Subject:</td><td>{subject}</td></tr><tr><td>Attactments:</td><td>{logAttachments}</td></tr><tr><td>Posted?:</td><td>{posted}</td></tr><tr><td>Error Messages:</td><td>{errorMessages}</td></tr></table><p>{htmlTable}</p><p>&nbsp;</p><p>&nbsp;</p><p>_______________________________________________________________________________________________</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></body>");
+                HtmlString html = new HtmlString($"<body><p>&nbsp;</ p><table width =\"680\" border=\"1\" cellpadding=\"1\"><tr><td width=\"172\">Post Status:</td><td width=\"492\">{postData}</td></tr><tr><td>Email From:</td><td>{emailFrom}</td></tr><tr><td height=\"33\">Sent To:</td><td>{sentTo}</td></tr><tr><td>Time Recieved:</td><td>{timeRecieved}</td></tr><tr><td>Subject:</td><td>{subject}</td></tr><tr><td>Attactments:</td><td>{logAttachments}</td></tr><tr><td>Posted?:</td><td>{posted}</td></tr><tr><td>Error Messages:</td><td>{errorMessages}</td></tr></table><p>{htmlTable}</p><p>&nbsp;</p><p>&nbsp;</p><p>_______________________________________________________________________________________________</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></body>");
 
                 htmlString = html.ToString();
             }
@@ -164,85 +152,8 @@ namespace DocxEmailToWordPress
         } // end sendMail
 
 
-        public void TestSend()
-        {
-
-            SmtpClient smtpClient = new SmtpClient();
-
-            NetworkCredential basicCredential = new NetworkCredential(username, Password);
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress(_sentFrom);
-            message.To.Add(new MailAddress(_sendTo));
-            message.BodyEncoding = System.Text.Encoding.UTF8;
-
-            smtpClient.Host = _smtpHost;
-            smtpClient.Port = _port;
-            // smtpClient.UseDefaultCredentials = false;
-            smtpClient.EnableSsl = true;
-            smtpClient.Credentials = basicCredential;
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-
-
-            //// Check if the bcc value is null or an empty string
-            //if ((bcc != null) && (bcc != string.Empty))
-            //{
-            //    // Set the Bcc address of the mail message
-            //    message.Bcc.Add(new MailAddress(bcc));
-            //}      // Check if the cc value is null or an empty value
-            //if ((cc != null) && (cc != string.Empty))
-            //{
-            //    // Set the CC address of the mail message
-            //    message.CC.Add(new MailAddress(cc));
-            //}       // Set the subject of the mail message
-
-            message.Subject = "Test Message" + DateTime.Now.ToShortTimeString();
-
-            //Set IsBodyHtml to true means you can send HTML email.
-            message.IsBodyHtml = true;
-
-            // Set the priority of the mail message to normal
-            message.Priority = MailPriority.Normal;
-
-            message.Body = "<body><p>test</p></body>";
-
-            //  BuildMessage(postLog);
-
-            // Set the method that is called back when the send operation ends.
-            smtpClient.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
-
-            object userState = message;
-
-            smtpClient.SendAsync(message, userState);
-
-            Console.WriteLine("Sending message..");
-
-                // smtpClient.Send(message);
-
-                //if (mailSent == false)
-                //{
-                //    smtpClient.SendAsyncCancel();
-                //}
-
-
-
-
-
-            //    return true;
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    //Error, could not send the message
-            //    Console.Write(ex.Message);
-
-
-            //    return false;
-            //}
-
-
-
-        }
+        
+        // async call back #not in use#
 
         public void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
         {
@@ -265,7 +176,7 @@ namespace DocxEmailToWordPress
             else
             {
                 Console.WriteLine("Message [{0}] sent.", subject);
-                mailSent = true;
+               
             }
             
 

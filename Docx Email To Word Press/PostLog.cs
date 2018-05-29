@@ -22,7 +22,7 @@ namespace DocxEmailToWordPress
         public String ErrorMessage { get; set; }
         public Boolean Posted { get; set; }
         public String TimeRecieved { get; set; }
-        public String PostData { get; set; }
+        public String PostStatus { get; set; }
         public String PostedHtml { get; set; }
     }
 }

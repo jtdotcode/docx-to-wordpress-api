@@ -20,7 +20,7 @@ namespace DocxEmailToWordPress
         
 
         WordPressApi wordPressApi = new WordPressApi();
-        GetWordHtml getWordHtml = new GetWordHtml();
+        
         SendEmail sendEmail = new SendEmail(smtpHost, smtpSendTo, smtpSentFrom,  smtpPort);
         String fileExtension = ".docx";
         String tmpFolderPath = "c:\\emails\\";
@@ -34,7 +34,7 @@ namespace DocxEmailToWordPress
         public bool SSL = true;
         private String username = "***REMOVED***";
         private String password = "***REMOVED***";
-       
+        public Int32 messageLeft = 0;
 
         public bool TestConnection()
         {
@@ -103,7 +103,7 @@ namespace DocxEmailToWordPress
                     for (int i = messageCount; i > 0; i--)
                     {
                         // log message count
-
+                        messageLeft = i;
 
                         // check if the message is from specific sender address, else delete the message
                         if (client.GetMessage(i).Headers.From.Address == tssAddress)
@@ -157,7 +157,7 @@ namespace DocxEmailToWordPress
 
                             
                             // set the folder to save the attactments to.
-                            var filePath = tmpFolderPath + attachment.FileName;
+                            var filePath = @tmpFolderPath + attachment.FileName;
 
                             // save the attachment to the computer
                             attachment.Save(new System.IO.FileInfo(System.IO.Path.Combine(tmpFolderPath, attachment.FileName)));
@@ -180,20 +180,24 @@ namespace DocxEmailToWordPress
 
                                 if (exetension == fileExtension)
                                 {
+                                    String htmldata;
+
                                     // text from the docx file and return a html table
-                                    var htmldata = getWordHtml.ReadWordDocument(filePath);
+                                    using (GetWordHtml getWordHtml = new GetWordHtml()) {
+                                        htmldata = getWordHtml.ReadWordDocument(filePath);
+
+                                        // post html table from docx
+                                        var responseData = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
+
+                                        // check if successful
+                                        posted = responseData.IsSuccessful;
+
+                                        // update List<PostLog> element Post with the Returned Data
+                                        emailLog.ElementAt(messageNum).PostStatus = responseData.ResponseStatus.ToString();
+
+                                    } 
 
                                     
-
-                                    // post html table from docx
-                                    var responseData = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
-
-                                    // check if successful
-                                    posted = responseData.IsSuccessful;
-
-                                    // update List<PostLog> element Post with the Returned Data
-                                    emailLog.ElementAt(messageNum).PostData = responseData.Content;
-
                                     var from = message.Headers.From.Address;
                                     var subject = message.Headers.Subject;
                                     var currentTime = DateTime.Now.ToShortDateString();
@@ -208,6 +212,20 @@ namespace DocxEmailToWordPress
 
                                         // set posted for Email Log.
                                         emailLog.ElementAt(messageNum).Posted = posted;
+
+                                        // remove file from temp folder
+
+                                        try
+                                        {
+                                            File.Delete(filePath);
+                                        }
+                                        catch (Exception ex)
+                                        {
+
+                                            Console.Write(ex.ToString());
+                                        }
+                                        
+
 
                                     }
                                     else
@@ -261,15 +279,15 @@ namespace DocxEmailToWordPress
 
 
                             // if the there is no more messages 
-                            if (messageCount == 1)
+                            if (messageLeft == 1)
                             {
 
                                 noMessages = true;
                                 sendEmail.Send(emailLog);
 
-                                messageCount = 0;
+                                messageLeft = 0;
 
-                            } else if( messageCount == 0)
+                            } else if( messageLeft == 0)
                             {
 
                                 noMessages = false;
