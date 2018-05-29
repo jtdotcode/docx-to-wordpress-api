@@ -30,6 +30,7 @@ namespace DocxEmailToWordPress
 
             WordPressApi wordPressApi = new WordPressApi();
             GetWordHtml getWordHtml = new GetWordHtml();
+            SendEmail sendEmail = new SendEmail("***REMOVED***", "***REMOVED***", "Pop@ioit.com.au", 587 );
             //EmailDownloader emailDownloader = new EmailDownloader();
 
             // wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
@@ -49,9 +50,11 @@ namespace DocxEmailToWordPress
             //    Console.WriteLine("Something Went Wrong");
             //}
 
-            EmailDownloader emailDownloader = new EmailDownloader();
+            //EmailDownloader emailDownloader = new EmailDownloader();
 
-            emailDownloader.DownloadAttachments();
+            //emailDownloader.DownloadAttachments();
+
+            sendEmail.TestSend();
 
 
 

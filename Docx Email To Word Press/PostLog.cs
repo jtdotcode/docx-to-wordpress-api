@@ -16,6 +16,7 @@ namespace DocxEmailToWordPress
         public byte[] Body { get; set; }
         public DateTime CurrentDateTime { get; set; }
         public Int32 MessageCount { get; set; }
+        public Int32 MessageOf { get; set; }
         public Boolean Attachment { get; set; }
         public Dictionary<String, Int64> Attachments { get; set; }
         public String ErrorMessage { get; set; }

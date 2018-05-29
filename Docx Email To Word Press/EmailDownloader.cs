@@ -13,9 +13,9 @@ namespace DocxEmailToWordPress
     class EmailDownloader
     {
         static String smtpSendTo = "***REMOVED***";
-        static String smtpSentFrom = "***REMOVED***@vic.exemail.com.au";
-        static String smtpHost = "smtp.vic.exemail.com.au";
-        static int smtpPort = 25;
+        static String smtpSentFrom = "***REMOVED***";
+        static String smtpHost = "***REMOVED***";
+        static int smtpPort = 587;
         static String tssAddress = "***REMOVED***";
         
 
@@ -27,7 +27,6 @@ namespace DocxEmailToWordPress
         PostLog log = new PostLog();
         List<PostLog> emailLog = new List<PostLog>();
 
-        Int64 EpochLastSent { set; get; }
 
         // email settings 
         public String hostname = "pop.gmail.com";
@@ -115,8 +114,8 @@ namespace DocxEmailToWordPress
                             // create log with email details
                             emailLog.Add(new PostLog() { Body = client.GetMessage(i).MessagePart.Body,
                                 CurrentDateTime = DateTime.Now, FromAddress = client.GetMessage(i).Headers.From.Address,
-                                Subject = client.GetMessage(i).Headers.Subject, MessageCount = messageCount,
-                                ToAddress = client.GetMessage(i).Headers.To.ToString(), TimeRecieved = client.GetMessage(i).Headers.Date, Messages = new List<String>(), Attachments = new Dictionary<String, long>()
+                                Subject = client.GetMessage(i).Headers.Subject, MessageCount = messageCount, MessageOf = i,
+                                ToAddress = client.GetMessage(i).Headers.To.First().Address, TimeRecieved = client.GetMessage(i).Headers.Date, Messages = new List<String>(), Attachments = new Dictionary<String, long>()
 
                             });
 
@@ -193,11 +192,11 @@ namespace DocxEmailToWordPress
                                     posted = responseData.IsSuccessful;
 
                                     // update List<PostLog> element Post with the Returned Data
-                                    emailLog.ElementAt(messageNum).PostData = responseData.ErrorMessage;
+                                    emailLog.ElementAt(messageNum).PostData = responseData.Content;
 
                                     var from = message.Headers.From.Address;
                                     var subject = message.Headers.Subject;
-                                    var currentTime = DateTime.Now;
+                                    var currentTime = DateTime.Now.ToShortDateString();
 
                                     if (posted)
                                     {
@@ -206,6 +205,9 @@ namespace DocxEmailToWordPress
 
                                         // update Posted htmldate for log
                                         emailLog.ElementAt(messageNum).PostedHtml = htmldata;
+
+                                        // set posted for Email Log.
+                                        emailLog.ElementAt(messageNum).Posted = posted;
 
                                     }
                                     else
@@ -259,14 +261,15 @@ namespace DocxEmailToWordPress
 
 
                             // if the there is no more messages 
-                            if (messageCount <= 1)
+                            if (messageCount == 1)
                             {
 
                                 noMessages = true;
                                 sendEmail.Send(emailLog);
 
+                                messageCount = 0;
 
-                            } else
+                            } else if( messageCount == 0)
                             {
 
                                 noMessages = false;
