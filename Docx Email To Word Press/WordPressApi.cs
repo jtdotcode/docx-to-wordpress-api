@@ -15,11 +15,11 @@ namespace DocxEmailToWordPress
     class WordPressApi
     {
         private const String status = "draft";
-        // private const String title = "test-wordpress-api7";
+        
         private String[] categorie = { "43" };
         private const String WpApiUrl = "***REMOVED***";
 
-        private const String username = "***REMOVED***";
+        private const String username = "poster";
         private const String password = "***REMOVED***";
 
        

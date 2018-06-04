@@ -7,6 +7,7 @@ using OpenPop.Mime;
 using OpenPop.Pop3;
 using OpenPop.Common;
 using System.IO;
+using System.Configuration;
 
 namespace DocxEmailToWordPress
 {
@@ -18,26 +19,30 @@ namespace DocxEmailToWordPress
 
         static String smtpSendTo = "***REMOVED***";
         static String smtpSentFrom = "***REMOVED***";
-        static String smtpHost = "***REMOVED***";
+        static String smtpHost = ConfigurationManager.AppSettings["smtpMailHost"].ToString();
+        static String smtpUsername = ConfigurationManager.AppSettings["smtpMailUsername"].ToString();
+        static String smtpPassword = ConfigurationManager.AppSettings["smtpMailPassword"].ToString();
         static int smtpPort = 587;
-        static String tssAddress = "***REMOVED***";
+        static bool smtpSSL = true;
+
+        static String allowedAddress = "***REMOVED***";
         
 
         WordPressApi wordPressApi = new WordPressApi();
         
-        SendEmail sendEmail = new SendEmail(smtpHost, smtpSendTo, smtpSentFrom,  smtpPort);
+        SendEmail sendEmail = new SendEmail(smtpHost, smtpSendTo, smtpSentFrom,  smtpPort, smtpUsername, smtpPassword, smtpSSL);
         String fileExtension = ".docx";
         String tmpFolderPath = "c:\\emails\\";
         PostLog log = new PostLog();
         List<PostLog> emailLog = new List<PostLog>();
 
 
-        // email settings 
-        public String hostname = "pop.gmail.com";
-        public Int32 port = 995;
-        public bool SSL = true;
-        private String username = "***REMOVED***";
-        private String password = "***REMOVED***";
+        // recieve email settings 
+        public String popHost = ConfigurationManager.AppSettings["popMailHost"].ToString();
+        public Int32 popPort = 995;
+        public bool popSSL = true;
+        private String popUsername = ConfigurationManager.AppSettings["popMailUsername"].ToString();
+        private String popPassword = ConfigurationManager.AppSettings["popMailPassword"].ToString();
         public Int32 messageLeft = 0;
 
         public bool TestConnection()
@@ -47,8 +52,8 @@ namespace DocxEmailToWordPress
 
                 try
                 {
-                    client.Connect(hostname, port, SSL);
-                    client.Authenticate(username, password, AuthenticationMethod.UsernameAndPassword);
+                    client.Connect(popHost, popPort, popSSL);
+                    client.Authenticate(popUsername, popPassword, AuthenticationMethod.UsernameAndPassword);
 
 
 
@@ -89,8 +94,8 @@ namespace DocxEmailToWordPress
             using (Pop3Client client = new Pop3Client())
             {
                 
-                client.Connect(hostname, port, SSL);
-                client.Authenticate(username, password, AuthenticationMethod.UsernameAndPassword);
+                client.Connect(popHost, popPort, popSSL);
+                client.Authenticate(popUsername, popPassword, AuthenticationMethod.UsernameAndPassword);
 
                 var messageNum = 0;
 
@@ -135,7 +140,7 @@ namespace DocxEmailToWordPress
 
 
                         // check if the message is from specific sender address, else delete the message
-                        if (client.GetMessage(i).Headers.From.Address == tssAddress)
+                        if (client.GetMessage(i).Headers.From.Address == allowedAddress)
                         {
                             // add each message to a List<Message> Array
                             allMessages.Add(client.GetMessage(i));
@@ -154,9 +159,9 @@ namespace DocxEmailToWordPress
 
                             // add Errormessage to Messages List Array in PostData
                             
-                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + tssAddress + " Deleting " + subject + "From " + from);
+                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + allowedAddress + " Deleting " + subject + "From " + from);
 
-                            logger.Info("Email not from " + tssAddress + " Deleted email subject is: " + subject + "email is from: " + from);
+                            logger.Info("Email not from " + allowedAddress + " Deleted email subject is: " + subject + "email is from: " + from);
                             
                             
                             

@@ -13,21 +13,25 @@ namespace DocxEmailToWordPress
     class SendEmail
     {
 
-        public string username = "***REMOVED***";
-        public string Password = "***REMOVED***";
+        public String _username;
+        public String _password;
         public String _smtpHost;
         public String _sendTo;
         public String _sentFrom;
+        public Boolean _SSL;
         public int _port;
         public String bcc = String.Empty;
         public String cc = String.Empty;
 
-        public SendEmail(String smtpHost, String sendTo, String sentFrom, int port)
+        public SendEmail(String smtpHost, String sendTo, String sentFrom, int port, String username, String password, Boolean SSL)
         {
             _smtpHost = smtpHost;
             _sendTo = sendTo;
             _sentFrom = sentFrom;
             _port = port;
+            _username = username;
+            _password = password;
+            _SSL = SSL;
 
         }
 
@@ -37,7 +41,7 @@ namespace DocxEmailToWordPress
             
             SmtpClient smtpClient = new SmtpClient();
 
-            NetworkCredential basicCredential = new NetworkCredential(username, Password);
+            NetworkCredential basicCredential = new NetworkCredential(_username, _password);
                 MailMessage message = new MailMessage();
                 message.From = new MailAddress(_sentFrom);
                 message.To.Add(new MailAddress(_sendTo));
@@ -45,8 +49,8 @@ namespace DocxEmailToWordPress
 
                 smtpClient.Host = _smtpHost;
                 smtpClient.Port = _port;
-               // smtpClient.UseDefaultCredentials = false;
-                smtpClient.EnableSsl = true;
+            // smtpClient.UseDefaultCredentials = false;
+            smtpClient.EnableSsl = _SSL;
                 smtpClient.Credentials = basicCredential;
                 smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
                
