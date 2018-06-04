@@ -5,6 +5,8 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
+[assembly: log4net.Config.XmlConfigurator(Watch=true)]
+
 namespace DocxEmailToWordPress
 {
     static class Program
@@ -13,19 +15,13 @@ namespace DocxEmailToWordPress
         /// The main entry point for the application.
         /// </summary>
         /// 
+
+        // log4net class log name
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
-
-        static void Main()
-        {
-            //Double timerIntervalInSecs = 60;
-
-            //ServiceBase[] ServicesToRun;
-            //ServicesToRun = new ServiceBase[]
-            //{
-            //    new Service1(){ IntervalInSecs = timerIntervalInSecs }
-
-            //};
-            //ServiceBase.Run(ServicesToRun);
+            static void Main(string[] args)
+            {
+            
 
 
             WordPressApi wordPressApi = new WordPressApi();
@@ -54,8 +50,8 @@ namespace DocxEmailToWordPress
 
             emailDownloader.DownloadAttachments();
 
-            
 
+            Console.Read();
 
 
 

@@ -12,6 +12,10 @@ namespace DocxEmailToWordPress
 {
     class EmailDownloader
     {
+
+        // log4net class log name
+      private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         static String smtpSendTo = "***REMOVED***";
         static String smtpSentFrom = "***REMOVED***";
         static String smtpHost = "***REMOVED***";
@@ -52,8 +56,8 @@ namespace DocxEmailToWordPress
                 catch (Exception ex)
                 {
 
-                    Console.WriteLine(ex);
-
+                    
+                    logger.Fatal(ex);
 
                 }
 
@@ -97,13 +101,38 @@ namespace DocxEmailToWordPress
                     // get total message count in the inbox
                     int messageCount = client.GetMessageCount();
 
+                    if(messageCount == 0)
+                    {
+                        logger.Info("There are no new messages to Download, Exiting");
+                    }
+
                     List<Message> allMessages = new List<Message>(messageCount);
 
                     // count down the total messages
                     for (int i = messageCount; i > 0; i--)
                     {
-                        // log message count
-                        messageLeft = i;
+
+
+                        logger.Info("Total Emails to Download are : " + messageCount);
+                        logger.Info("Processing " + i + "of " + messageCount);
+                        
+
+                        // create log with email details
+                        emailLog.Add(new PostLog()
+                        {
+                            Body = client.GetMessage(i).MessagePart.Body,
+                            CurrentDateTime = DateTime.Now,
+                            FromAddress = client.GetMessage(i).Headers.From.Address,
+                            Subject = client.GetMessage(i).Headers.Subject,
+                            MessageCount = messageCount,
+                            MessageOf = i,
+                            ToAddress = client.GetMessage(i).Headers.To.First().Address,
+                            TimeRecieved = client.GetMessage(i).Headers.Date,
+                            Messages = new List<String>(),
+                            Attachments = new Dictionary<String, long>()
+
+                        });
+
 
                         // check if the message is from specific sender address, else delete the message
                         if (client.GetMessage(i).Headers.From.Address == tssAddress)
@@ -111,13 +140,8 @@ namespace DocxEmailToWordPress
                             // add each message to a List<Message> Array
                             allMessages.Add(client.GetMessage(i));
 
-                            // create log with email details
-                            emailLog.Add(new PostLog() { Body = client.GetMessage(i).MessagePart.Body,
-                                CurrentDateTime = DateTime.Now, FromAddress = client.GetMessage(i).Headers.From.Address,
-                                Subject = client.GetMessage(i).Headers.Subject, MessageCount = messageCount, MessageOf = i,
-                                ToAddress = client.GetMessage(i).Headers.To.First().Address, TimeRecieved = client.GetMessage(i).Headers.Date, Messages = new List<String>(), Attachments = new Dictionary<String, long>()
-
-                            });
+                            logger.Info("Adding email for processing from " + client.GetMessage(i).Headers.From.Address + " Subject " + client.GetMessage(i).Headers.Subject);
+                 
 
                         } else
                         {
@@ -129,8 +153,12 @@ namespace DocxEmailToWordPress
                             client.DeleteMessage(i);
 
                             // add Errormessage to Messages List Array in PostData
-                            emailLog.ElementAt(messageNum).Messages.Add( "Email not from " + tssAddress + " Deleting " + subject + "From " + from );
-                            Console.Write("Deleted" + subject + "From " + from);
+                            
+                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + tssAddress + " Deleting " + subject + "From " + from);
+
+                            logger.Info("Email not from " + tssAddress + " Deleted email subject is: " + subject + "email is from: " + from);
+                            
+                            
                             
                         }
 
@@ -141,11 +169,13 @@ namespace DocxEmailToWordPress
                     }
 
                     messageNum = 0;
+                    var messageLeft = allMessages.Count;
 
                     // enumerate each message 
                     foreach (Message message in allMessages)
                     {
-                        
+                        messageLeft--;
+
                         // Add all attachments for each message a List Array
                         var attachments = message.FindAllAttachments();
 
@@ -195,6 +225,8 @@ namespace DocxEmailToWordPress
                                         // update List<PostLog> element Post with the Returned Data
                                         emailLog.ElementAt(messageNum).PostStatus = responseData.ResponseStatus.ToString();
 
+                                        logger.Info("File: " + filePath + " Posted Status: " + responseData.ResponseStatus.ToString());
+
                                     } 
 
                                     
@@ -221,8 +253,8 @@ namespace DocxEmailToWordPress
                                         }
                                         catch (Exception ex)
                                         {
-
-                                            Console.Write(ex.ToString());
+                                            logger.Fatal(ex);
+                                            
                                         }
                                         
 
@@ -234,7 +266,7 @@ namespace DocxEmailToWordPress
 
                                         // log if unable to post
                                         emailLog.ElementAt(messageNum).Messages.Add($"Something went wrong with the post {subject} {from} - {currentTime} ");
-
+                                        logger.Info($"Something went wrong with the post! Email: {subject} {from} Atachment: {filePath} ");
                                       
 
                                     }
@@ -252,7 +284,8 @@ namespace DocxEmailToWordPress
                                         
 
                                         // log deleted message
-                                        emailLog.ElementAt(messageNum).Messages.Add("No Docx Attachment Found, Deleted " + filePath + DateTime.Now);
+                                        emailLog.ElementAt(messageNum).Messages.Add("Non Docx Attachment Found, Deleted " + filePath + " " + DateTime.Now);
+                                        logger.Info("Non Docx Attachment Found, Deleted " + filePath + " ");
                                     }
                                     catch (Exception ex)
                                     {
@@ -260,6 +293,7 @@ namespace DocxEmailToWordPress
 
                                         // log failed to delete 
                                         emailLog.ElementAt(messageNum).Messages.Add("Error unable to delete " + filePath + ex);
+                                        logger.Fatal("Error unable to delete " + filePath + " Exception: " + ex);
                                     }
                                     
                                 }
@@ -269,34 +303,40 @@ namespace DocxEmailToWordPress
                             {
                                 // attachment size mismatch
                                 emailLog.ElementAt(messageNum).Messages.Add("Attachment Mismatch" + attachment.FileName + " file size should be: " + msgAttachmentFileSize + " Bytes");
-                                
+
+                                logger.Info("Attachment Mismatch " + attachment.FileName + " file size should be: " + msgAttachmentFileSize + " Bytes");
+
+
                                 // Trying to download again
+                                logger.Info("Trying to download attactments again");
+
                                 DownloadAttachments();
+
+                               
 
                                 return false;
 
                             }
 
+                            
+                        }
 
-                            // if the there is no more messages 
-                            if (messageLeft == 1)
-                            {
 
-                                noMessages = true;
-                                sendEmail.Send(emailLog);
+                        Message lastItem = allMessages.Last();
 
-                                messageLeft = 0;
+                        // if the there is no more messages 
+                        if (message.Equals(lastItem))
+                        {
 
-                            } else if( messageLeft == 0)
-                            {
+                            noMessages = true;
+                            sendEmail.Send(emailLog);
 
-                                noMessages = false;
-                            }
-
+                            messageLeft = 0;
 
 
 
                         }
+
 
                         messageNum++;
 

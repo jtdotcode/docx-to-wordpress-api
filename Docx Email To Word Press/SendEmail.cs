@@ -111,43 +111,61 @@ namespace DocxEmailToWordPress
 
         public String BuildMessage(List<PostLog> p)
         {
-            StringBuilder SbAttachments = new StringBuilder();
-            StringBuilder SbErrorMessages = new StringBuilder();
-            String htmlString = String.Empty;
+            
+            StringBuilder SbHtmlString = new StringBuilder(String.Empty);
+            var i = 0;
 
             foreach (var log in p)
             {
-
+                StringBuilder SbAttachments = new StringBuilder();
+                StringBuilder SbErrorMessages = new StringBuilder();
                 var postData = log.PostStatus;
                 var emailFrom = log.FromAddress;
                 var sentTo = log.ToAddress;
                 var timeRecieved = log.TimeRecieved;
                 var subject = log.Subject;
-                var logAttachments = SbAttachments.ToString();
+                
                 var posted = log.Posted.ToString();
-                var logMessages = log.Messages;
-                var errorMessages = SbErrorMessages.ToString();
+                
                 var htmlTable = log.PostedHtml;
 
-                foreach (var attachment in log.Attachments)
-                {
-                    SbAttachments.Append("Attechment is " + attachment.Key.ToString() + "File size is: " + attachment.Value.ToString());
 
+
+
+                foreach (var attachment in log.Attachments) {
+                    SbAttachments.Append("Attechment is " + attachment.Key + "File size is: " + attachment.Value.ToString());
 
                 }
+                
 
-                foreach (var logMessage in logMessages)
+                foreach (var msgLog in log.Messages)
                 {
-                    SbErrorMessages.Append(logMessage.ToString());
+                    SbErrorMessages.Append(msgLog.ToString());
                 }
 
-                HtmlString html = new HtmlString($"<body><p>&nbsp;</ p><table width =\"680\" border=\"1\" cellpadding=\"1\"><tr><td width=\"172\">Post Status:</td><td width=\"492\">{postData}</td></tr><tr><td>Email From:</td><td>{emailFrom}</td></tr><tr><td height=\"33\">Sent To:</td><td>{sentTo}</td></tr><tr><td>Time Recieved:</td><td>{timeRecieved}</td></tr><tr><td>Subject:</td><td>{subject}</td></tr><tr><td>Attactments:</td><td>{logAttachments}</td></tr><tr><td>Posted?:</td><td>{posted}</td></tr><tr><td>Error Messages:</td><td>{errorMessages}</td></tr></table><p>{htmlTable}</p><p>&nbsp;</p><p>&nbsp;</p><p>_______________________________________________________________________________________________</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p></body>");
+                var errorMessages = SbErrorMessages.ToString();
+                var logAttachments = SbAttachments.ToString();
 
-                htmlString = html.ToString();
+                HtmlString html = new HtmlString($"<p>&nbsp;</ p><table width =\"680\" border=\"1\" cellpadding=\"1\"><tr><td width=\"172\">Post Status:</td><td width=\"492\">{postData}</td></tr><tr><td>Email From:</td><td>{emailFrom}</td></tr><tr><td height=\"33\">Sent To:</td><td>{sentTo}</td></tr><tr><td>Time Recieved:</td><td>{timeRecieved}</td></tr><tr><td>Subject:</td><td>{subject}</td></tr><tr><td>Attactments:</td><td>{logAttachments}</td></tr><tr><td>Posted?:</td><td>{posted}</td></tr><tr><td>Error Messages:</td><td>{errorMessages}</td></tr></table><p>{htmlTable}</p><p>&nbsp;</p><p>&nbsp;</p><p>_______________________________________________________________________________________________</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>");
+
+
+                if(i == 0)
+                {
+                    SbHtmlString.Append("<body>");
+
+                } else if (p.Count == i)
+                {
+                    SbHtmlString.Append("</body>");
+                }
+
+                SbHtmlString.Append(html.ToString());
+
+                i++;
+
             }
 
 
-            return htmlString;
+            return SbHtmlString.ToString();
 
         } // end sendMail
 
