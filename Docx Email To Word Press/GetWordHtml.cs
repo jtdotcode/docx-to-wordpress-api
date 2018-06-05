@@ -53,7 +53,7 @@ namespace DocxEmailToWordPress
             // this is the main table that contains the schools names and hours, it is table index 1
             OpenXmlElement ClonedNode = (OpenXmlElement)element.Elements<Table>().ElementAt(1).CloneNode(true);
 
-            // set the elemnts to table row index 1, this is the middle row in the table
+            // set the elements to table row index 1, this is the middle row in the table
             OpenXmlElement row = ClonedNode.Elements<TableRow>().ElementAt(1);
 
             // set the elements to cell index 0 this contains the school names
@@ -77,13 +77,13 @@ namespace DocxEmailToWordPress
             
 
             // 
-            // if the lists dont match write to to logfile and exit.
+            // if the lists don't match write to log file and exit.
             // if both list have the same amount of elements then assume the data is correct
             // and merge lists into a dictionary with school name as key can hours as value. 
 
             if (schoolsList.Count != HoursList.Count)
             {
-                Console.Write("something Went Wrong the lists arent even");
+                Console.Write("something Went Wrong the lists aren't even");
 
             } else
             {
@@ -110,7 +110,7 @@ namespace DocxEmailToWordPress
         private void GetPlainText(OpenXmlElement element, int cell)
         {
             
-            // Emumerates each element of the cell 
+            // Enumerates each element of the cell 
             foreach (OpenXmlElement item in element.Elements())
                {
 
@@ -134,7 +134,7 @@ namespace DocxEmailToWordPress
 
                         }
 
-                        // bad solution need better opions, but mah, searchs document twice closing date is over written need 
+                        // bad solution need better options, but mah, searches document twice closing date is over written need 
                         // to fix.
                         if (cell == 2)
                         {
@@ -170,14 +170,14 @@ namespace DocxEmailToWordPress
 
                     // Paragraph 
                     case "p":
-                        //call back method if paragraph is reached, continuing Emumeration .
+                        //call back method if paragraph is reached, continuing Enumeration .
                         GetPlainText(item, cell);
 
                         break;
 
 
                     default:
-                        // no match, callback method and continue Emumeration
+                        // no match, callback method and continue Enumeration
                         GetPlainText(item, cell);
                         break;
 

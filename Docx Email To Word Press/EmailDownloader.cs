@@ -19,9 +19,9 @@ namespace DocxEmailToWordPress
 
         static String smtpSendTo = "***REMOVED***";
         static String smtpSentFrom = "***REMOVED***";
-        static String smtpHost = ConfigurationManager.AppSettings["smtpMailHost"].ToString();
-        static String smtpUsername = ConfigurationManager.AppSettings["smtpMailUsername"].ToString();
-        static String smtpPassword = ConfigurationManager.AppSettings["smtpMailPassword"].ToString();
+        static String smtpHost = "***REMOVED***";
+        static String smtpUsername = "***REMOVED***";
+        static String smtpPassword = "***REMOVED***";
         static int smtpPort = 587;
         static bool smtpSSL = true;
 
@@ -37,12 +37,12 @@ namespace DocxEmailToWordPress
         List<PostLog> emailLog = new List<PostLog>();
 
 
-        // recieve email settings 
-        public String popHost = ConfigurationManager.AppSettings["popMailHost"].ToString();
+        // receive email settings 
+        public String popHost = "pop.gmail.com";
         public Int32 popPort = 995;
         public bool popSSL = true;
-        private String popUsername = ConfigurationManager.AppSettings["popMailUsername"].ToString();
-        private String popPassword = ConfigurationManager.AppSettings["popMailPassword"].ToString();
+        private String popUsername = "***REMOVED***";
+        private String popPassword = "***REMOVED***";
         public Int32 messageLeft = 0;
 
         public bool TestConnection()
@@ -103,7 +103,7 @@ namespace DocxEmailToWordPress
                 if (client.Connected)
                 {
                     
-                    // get total message count in the inbox
+                    // get total message count in the in box
                     int messageCount = client.GetMessageCount();
 
                     if(messageCount == 0)
@@ -157,7 +157,7 @@ namespace DocxEmailToWordPress
 
                             client.DeleteMessage(i);
 
-                            // add Errormessage to Messages List Array in PostData
+                            // add Error message to Messages List Array in PostData
                             
                            emailLog.ElementAt(messageNum).Messages.Add("Email not from " + allowedAddress + " Deleting " + subject + "From " + from);
 
@@ -191,7 +191,7 @@ namespace DocxEmailToWordPress
                             Int64 msgAttachmentFileSize = attachment.Body.Length;
 
                             
-                            // set the folder to save the attactments to.
+                            // set the folder to save the attachments to.
                             var filePath = @tmpFolderPath + attachment.FileName;
 
                             // save the attachment to the computer
@@ -211,17 +211,17 @@ namespace DocxEmailToWordPress
 
                                 var posted = false;
 
-                                //if the attachemnt doesnt match the fileExtension type delete it
+                                //if the attachment doesn't match the fileExtension type delete it
 
                                 if (exetension == fileExtension)
                                 {
                                     String htmldata;
 
-                                    // text from the docx file and return a html table
+                                    // text from the docx file and return a HTML table
                                     using (GetWordHtml getWordHtml = new GetWordHtml()) {
                                         htmldata = getWordHtml.ReadWordDocument(filePath);
 
-                                        // post html table from docx
+                                        // post HTML table from docx
                                         var responseData = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
 
                                         // check if successful
@@ -271,7 +271,7 @@ namespace DocxEmailToWordPress
 
                                         // log if unable to post
                                         emailLog.ElementAt(messageNum).Messages.Add($"Something went wrong with the post {subject} {from} - {currentTime} ");
-                                        logger.Info($"Something went wrong with the post! Email: {subject} {from} Atachment: {filePath} ");
+                                        logger.Info($"Something went wrong with the post! Email: {subject} {from} Attachment: {filePath} ");
                                       
 
                                     }
@@ -313,7 +313,7 @@ namespace DocxEmailToWordPress
 
 
                                 // Trying to download again
-                                logger.Info("Trying to download attactments again");
+                                logger.Info("Trying to download attachments again");
 
                                 DownloadAttachments();
 
@@ -345,7 +345,7 @@ namespace DocxEmailToWordPress
 
                         messageNum++;
 
-                    } // end foreach loop for messages
+                    } // end for-each loop for messages
 
 
 

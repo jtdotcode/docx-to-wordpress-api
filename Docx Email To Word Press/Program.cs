@@ -17,39 +17,25 @@ namespace DocxEmailToWordPress
         /// 
 
         // log4net class log name
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         
             static void Main(string[] args)
             {
-            
-
-
-            WordPressApi wordPressApi = new WordPressApi();
-            GetWordHtml getWordHtml = new GetWordHtml();
-           
-            //EmailDownloader emailDownloader = new EmailDownloader();
-
-            // wordPressApi.PostData(getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx"), getWordHtml.GetTitle());
-
-            // getWordHtml.ReadWordDocument(@"c:\\temp\\test.docx");
-
-            // jsonData.GetHtmlData(dic);
-
-            //if (emailDownloader.TestConnection())
-            //{
-            //    Console.WriteLine("Can connect");
-            //    emailDownloader.DownloadAttachments();
-
-            //}
-            //else
-            //{
-            //    Console.WriteLine("Something Went Wrong");
-            //}
-
             EmailDownloader emailDownloader = new EmailDownloader();
 
-            emailDownloader.DownloadAttachments();
+            if (emailDownloader.TestConnection())
+            {
+                logger.Info("Email Account Test Successful");
+                emailDownloader.DownloadAttachments();
 
+            }
+            else
+            {
+                logger.Info("Something Went Wrong, Unable to connect to Pop Email Account");
+                
+            }
+
+            
 
             Console.Read();
 

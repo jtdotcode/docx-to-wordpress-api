@@ -98,3 +98,5 @@ C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csprojResolveAssemblyReference.cache
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.dll
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.xml
+C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\log4net.dll
+C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\log4net.xml
