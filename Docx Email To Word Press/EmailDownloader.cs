@@ -17,8 +17,10 @@ namespace DocxEmailToWordPress
         // log4net class log name
       private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        static String smtpSendTo = "***REMOVED***";
+        static String smtpSendTo = "info@ioit.com.au";
         static String smtpSentFrom = "***REMOVED***";
+
+
         static String smtpHost = "***REMOVED***";
         static String smtpUsername = "***REMOVED***";
         static String smtpPassword = "***REMOVED***";
@@ -32,6 +34,7 @@ namespace DocxEmailToWordPress
         
         SendEmail sendEmail = new SendEmail(smtpHost, smtpSendTo, smtpSentFrom,  smtpPort, smtpUsername, smtpPassword, smtpSSL);
         String fileExtension = ".docx";
+        String DocumentFileNameContains = "STSupplier-Vac";
         String tmpFolderPath = "c:\\emails\\";
         PostLog log = new PostLog();
         List<PostLog> emailLog = new List<PostLog>();
@@ -213,7 +216,7 @@ namespace DocxEmailToWordPress
 
                                 //if the attachment doesn't match the fileExtension type delete it
 
-                                if (exetension == fileExtension)
+                                if (exetension == fileExtension && attachment.FileName.Contains(DocumentFileNameContains))
                                 {
                                     String htmldata;
 
@@ -231,6 +234,15 @@ namespace DocxEmailToWordPress
                                         emailLog.ElementAt(messageNum).PostStatus = responseData.ResponseStatus.ToString();
 
                                         logger.Info("File: " + filePath + " Posted Status: " + responseData.ResponseStatus.ToString());
+
+                                        
+
+                                        if (!responseData.IsSuccessful)
+                                        {
+                                            logger.Debug("Error Exception: " + responseData.ErrorException);
+                                            logger.Debug("Post Error StatusCode: " + responseData.StatusCode);
+                                            logger.Debug("Post Error Message: " + responseData.ErrorMessage);
+                                        }
 
                                     } 
 
@@ -272,7 +284,13 @@ namespace DocxEmailToWordPress
                                         // log if unable to post
                                         emailLog.ElementAt(messageNum).Messages.Add($"Something went wrong with the post {subject} {from} - {currentTime} ");
                                         logger.Info($"Something went wrong with the post! Email: {subject} {from} Attachment: {filePath} ");
-                                      
+                                        
+
+                                        if (!attachment.FileName.Contains(DocumentFileNameContains)){
+
+                                            logger.Info($"Document File Name doesnt Contain: {DocumentFileNameContains} FileName is: {filePath} ");
+                                        }
+
 
                                     }
 

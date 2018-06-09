@@ -12,6 +12,8 @@ namespace DocxEmailToWordPress
 {
     class SendEmail
     {
+        // log4net class log name
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public String _username;
         public String _password;
@@ -93,8 +95,9 @@ namespace DocxEmailToWordPress
                 smtpClient.Send(message);
 
 
-                Console.WriteLine("Sending message..");
-
+                logger.Info("Message Sent");
+                
+                
                 
 
                 return true;
@@ -102,9 +105,9 @@ namespace DocxEmailToWordPress
                 }
                 catch (Exception ex)
                 {
-                    //Error, could not send the message
-                    Console.Write(ex.Message);
-
+                //Error, could not send the message
+                    
+                logger.Error("Unable to send message", ex);
 
                 return false;
                 }
