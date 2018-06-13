@@ -1,51 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenPop.Mime;
 using OpenPop.Pop3;
-using OpenPop.Common;
 using System.IO;
-using System.Configuration;
 
 namespace DocxEmailToWordPress
 {
     class EmailDownloader
     {
 
+        
+
         // log4net class log name
-      private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        static String smtpSendTo = "info@ioit.com.au";
-        static String smtpSentFrom = "***REMOVED***";
+        static String smtpSendTo = Properties.Settings.Default.smtpSendTo;
+        static String smtpSentFrom = Properties.Settings.Default.smtpSentFrom;
 
 
-        static String smtpHost = "***REMOVED***";
-        static String smtpUsername = "***REMOVED***";
-        static String smtpPassword = "***REMOVED***";
-        static int smtpPort = 587;
-        static bool smtpSSL = true;
+        static String smtpHost = Properties.Settings.Default.smtpHost;
+        static String smtpUsername = Properties.Settings.Default.smtpUsername;
+        static String smtpPassword = Properties.Settings.Default.smtpPassword;
+        static int smtpPort = Properties.Settings.Default.smtpPort;
+        static bool smtpSSL = Properties.Settings.Default.smtpSSL;
 
-        static String allowedAddress = "***REMOVED***";
+
+        static String allowedEmailAddress = Properties.Settings.Default.allowedEmailAddress;
         
 
         WordPressApi wordPressApi = new WordPressApi();
         
         SendEmail sendEmail = new SendEmail(smtpHost, smtpSendTo, smtpSentFrom,  smtpPort, smtpUsername, smtpPassword, smtpSSL);
         String fileExtension = ".docx";
-        String DocumentFileNameContains = "STSupplier-Vac";
-        String tmpFolderPath = "c:\\emails\\";
+        String DocumentFileNameContains = Properties.Settings.Default.DocumentFileNameContains;
+        String tmpFolderPath = Path.GetTempPath();
         PostLog log = new PostLog();
         List<PostLog> emailLog = new List<PostLog>();
 
 
         // receive email settings 
-        public String popHost = "pop.gmail.com";
-        public Int32 popPort = 995;
-        public bool popSSL = true;
-        private String popUsername = "***REMOVED***";
-        private String popPassword = "***REMOVED***";
+        public String popHost = Properties.Settings.Default.popHost;
+        public Int32 popPort = Properties.Settings.Default.popPort;
+        public bool popSSL = Properties.Settings.Default.popSSL;
+        private String popUsername = Properties.Settings.Default.popUsername;
+        private String popPassword = Properties.Settings.Default.popPassword;
         public Int32 messageLeft = 0;
 
         public bool TestConnection()
@@ -122,7 +121,7 @@ namespace DocxEmailToWordPress
 
 
                         logger.Info("Total Emails to Download are : " + messageCount);
-                        logger.Info("Processing " + i + "of " + messageCount);
+                        logger.Info("Processing " + i + " of " + messageCount);
                         
 
                         // create log with email details
@@ -143,7 +142,7 @@ namespace DocxEmailToWordPress
 
 
                         // check if the message is from specific sender address, else delete the message
-                        if (client.GetMessage(i).Headers.From.Address == allowedAddress)
+                        if (client.GetMessage(i).Headers.From.Address == allowedEmailAddress)
                         {
                             // add each message to a List<Message> Array
                             allMessages.Add(client.GetMessage(i));
@@ -162,9 +161,9 @@ namespace DocxEmailToWordPress
 
                             // add Error message to Messages List Array in PostData
                             
-                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + allowedAddress + " Deleting " + subject + "From " + from);
+                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + allowedEmailAddress + " Deleting " + subject + "From " + from);
 
-                            logger.Info("Email not from " + allowedAddress + " Deleted email subject is: " + subject + "email is from: " + from);
+                            logger.Info("Email not from " + allowedEmailAddress + " Deleted email subject is: " + subject + "email is from: " + from);
                             
                             
                             

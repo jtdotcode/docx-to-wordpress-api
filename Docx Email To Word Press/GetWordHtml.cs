@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
-using System.Xml;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -14,7 +11,12 @@ using DocumentFormat.OpenXml.Wordprocessing;
 namespace DocxEmailToWordPress
 {
     class GetWordHtml : IDisposable
+
+
     {
+        // log4net class log name
+        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         // Specify whether the instance is disposed. 
         private bool disposed = false;
         
@@ -29,7 +31,7 @@ namespace DocxEmailToWordPress
         List<String> schoolsList = new List<string>();
         List<Double> HoursList = new List<Double>();
         Dictionary<String, Double> dic = new Dictionary<string, double>();
-        String multiTitle = "Multiple Schools";
+        String multiSchoolTitle = Properties.Settings.Default.multiSchoolTitle;
         String closingDate = string.Empty;
         String[] searchString = { "Monday,", "Tuesday,", "Wednesday,", "Thursday,", "Friday,", "Saturday,",  "Sunday," };
         
@@ -84,7 +86,8 @@ namespace DocxEmailToWordPress
 
             if (schoolsList.Count != HoursList.Count)
             {
-                Console.Write("something Went Wrong the lists aren't even");
+                logger.Error("something Went Wrong the lists aren't even");
+                logger.Error("Schools list = " + schoolsList.Count + " " + "Hours List = " + HoursList.Count);
 
             } else
             {
@@ -214,9 +217,9 @@ namespace DocxEmailToWordPress
                     sbHours.Append("<br />");
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
+                    logger.Error(ex);
                     throw;
                 }
 
@@ -231,8 +234,9 @@ namespace DocxEmailToWordPress
 
             HtmlString htmlString = new HtmlString($"<table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p>");
 
-
-            Console.WriteLine(htmlString.ToString());
+            // log html string
+            logger.Info(htmlString.ToString());
+            
 
             return htmlString.ToString();
 
@@ -250,7 +254,7 @@ namespace DocxEmailToWordPress
                 return singleTitle.ToString();
             } else
             {
-                return multiTitle;
+                return multiSchoolTitle;
             }
 
           

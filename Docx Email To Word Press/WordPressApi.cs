@@ -6,30 +6,32 @@ namespace DocxEmailToWordPress
 {
     class WordPressApi
     {
-        private const String status = "draft";
-        
-        private String[] categorie = { "43" };
-        private const String WpApiUrl = "***REMOVED***";
+        private String wpPostStatus = Properties.Settings.Default.wpPostStatus;
 
-        private const String username = "poster";
-        private const String password = "***REMOVED***";
+        private static String wpPostCategorie = Properties.Settings.Default.wpPostCategorie;
+        private String[] wpPostCategories = { wpPostCategorie };
+        private String wpApiUrl = Properties.Settings.Default.wpApiUrl;
 
-       
+        private String wpSiteUsername = Properties.Settings.Default.wpSiteUsername;
+        private String wpSitePassword = Properties.Settings.Default.wpSitePassword;
+
+
+
         public IRestResponse PostData(String contents, String title)
         {
             
 
-            var client = new RestClient(WpApiUrl);
-            client.Authenticator = new HttpBasicAuthenticator(username, password);
+            var client = new RestClient(wpApiUrl);
+            client.Authenticator = new HttpBasicAuthenticator(wpSiteUsername, wpSitePassword);
            
 
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(new JsonData
             {
-                status = status,
+                status = wpPostStatus,
                 title = title,
-                categories = categorie,
+                categories = wpPostCategories,
                 content = contents,
                 excerpt = "null!"
             });
