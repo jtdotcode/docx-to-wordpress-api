@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+
 [assembly: log4net.Config.XmlConfigurator(Watch = true)]
 
 namespace DocxEmailToWordPress
@@ -16,25 +18,37 @@ namespace DocxEmailToWordPress
         
             static void Main(string[] args)
             {
+
+           
             EmailDownloader emailDownloader = new EmailDownloader();
+            WordPressApi wordPressApi = new WordPressApi();
 
-            if (emailDownloader.TestConnection())
+            if (emailDownloader.TestConnection().Equals(true) && wordPressApi.testApi().Equals(true))
             {
-                logger.Info("Email Account Test Successful");
+                logger.Info("Accounts Test Successful");
                 emailDownloader.DownloadAttachments();
-
+                
             }
             else
             {
-                logger.Info("Something Went Wrong, Unable to connect to Pop Email Account");
                 
+                if (emailDownloader.TestConnection().Equals(false))
+                {
+                    logger.Error("Something Went Wrong, Unable to connect to Pop Email Account");
+                    logger.Error("Exiting");
+                }
+                if (wordPressApi.testApi().Equals(false))
+                {
+                    logger.Error("Something Went Wrong, Unable to connect to WP API Account");
+                    logger.Error("Exiting");
+                }
+
+
+                
+
             }
 
-
-
             
-
-
 
         }
     }

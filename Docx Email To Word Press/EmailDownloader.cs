@@ -89,6 +89,19 @@ namespace DocxEmailToWordPress
 
         }
 
+        public string checkBccAddress(string s)
+        {
+            if (s == String.Empty)
+            {
+                var emptyTo = "Hidden BCC Address";
+                return emptyTo;
+            }
+
+
+            return s;
+        }
+
+
         public Boolean DownloadAttachments()
         {
             bool noMessages = false;
@@ -133,7 +146,7 @@ namespace DocxEmailToWordPress
                             Subject = client.GetMessage(i).Headers.Subject,
                             MessageCount = messageCount,
                             MessageOf = i,
-                            ToAddress = client.GetMessage(i).Headers.To.First().Address,
+                            ToAddress = checkBccAddress(client.GetMessage(i).Headers.To.First().Address),
                             TimeRecieved = client.GetMessage(i).Headers.Date,
                             Messages = new List<String>(),
                             Attachments = new Dictionary<String, long>()

@@ -45,7 +45,9 @@ namespace DocxEmailToWordPress
             if (string.IsNullOrEmpty(filepath) || !File.Exists(filepath) )
             {
                 throw new Exception("The file is invalid. Please select an existing file again");
-            }
+            } 
+
+
 
             this.package = WordprocessingDocument.Open(filepath, true);
 
@@ -201,6 +203,8 @@ namespace DocxEmailToWordPress
 
             StringBuilder sbHours = new StringBuilder();
             StringBuilder sbSchools = new StringBuilder();
+            
+
             Double totalHours = 0.0;
 
             foreach (var item in dictionary)
@@ -232,7 +236,7 @@ namespace DocxEmailToWordPress
             String totalHoursString = totalHours.ToString();
             String closingDateString = closingDate;
 
-            HtmlString htmlString = new HtmlString($"<table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p>");
+            HtmlString htmlString = new HtmlString($"<!--test--><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p>");
 
             // log html string
             logger.Info(htmlString.ToString());

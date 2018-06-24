@@ -24,5 +24,6 @@ namespace DocxEmailToWordPress
         public String TimeRecieved { get; set; }
         public String PostStatus { get; set; }
         public String PostedHtml { get; set; }
+        
     }
 }
