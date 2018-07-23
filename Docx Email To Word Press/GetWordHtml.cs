@@ -7,6 +7,11 @@ using System.Web;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using GoogleMapsApi.Entities.Common;
+using GoogleMapsApi.Entities.PlacesText.Request;
+using GoogleMapsApi.Entities.PlacesText.Response;
+using GoogleMapsApi;
+using GoogleMapsApi.Entities.Elevation.Response;
 
 namespace DocxEmailToWordPress
 {
@@ -34,9 +39,9 @@ namespace DocxEmailToWordPress
         String multiSchoolTitle = Properties.Settings.Default.multiSchoolTitle;
         String closingDate = string.Empty;
         String[] searchString = { "Monday,", "Tuesday,", "Wednesday,", "Thursday,", "Friday,", "Saturday,",  "Sunday," };
-        
-       
-        
+        Boolean enableMaps = Properties.Settings.Default.enableMaps;
+
+
 
         public String ReadWordDocument(String filepath)
         {
@@ -212,13 +217,33 @@ namespace DocxEmailToWordPress
                 var x = item.Value;
                 totalHours = x + totalHours;
 
+                var placeId = GetMapPlaceId(item.Key.ToString());
+                var schoolName = item.Key.ToString();
+
                 try
                 {
-                    sbSchools.Append(item.Key.ToString());
-                    sbSchools.Append("<br />");
+                    if (placeId != String.Empty && enableMaps)
+                    {
 
-                    sbHours.Append(item.Value.ToString());
-                    sbHours.Append("<br />");
+                        sbSchools.Append("< a href=\"https://www.google.com/maps/dir/?api=1&origin=none&origin_place_id=" + placeId + "&travelmode=driving\">" + schoolName +  "</ a >");
+                        sbSchools.Append("<br />");
+
+                        sbHours.Append(item.Value.ToString());
+                        sbHours.Append("<br />");
+
+
+                    }
+                    else
+                    {
+                        sbSchools.Append(item.Key.ToString());
+                        sbSchools.Append("<br />");
+
+                        sbHours.Append(item.Value.ToString());
+                        sbHours.Append("<br />");
+
+
+                    }
+                    
 
                 }
                 catch (Exception ex)
@@ -236,7 +261,7 @@ namespace DocxEmailToWordPress
             String totalHoursString = totalHours.ToString();
             String closingDateString = closingDate;
 
-            HtmlString htmlString = new HtmlString($"<!--test--><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p>");
+            HtmlString htmlString = new HtmlString($"<!--test--><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p><p><i>Click on School Name for Google Map Directions</i></p>");
 
             // log html string
             logger.Info(htmlString.ToString());
@@ -262,6 +287,57 @@ namespace DocxEmailToWordPress
             }
 
           
+        }
+
+        public String GetMapPlaceId(String schoolName)
+        {
+            String mapPlaceId = String.Empty;
+
+            PlacesTextRequest request = new PlacesTextRequest() {
+                ApiKey = Properties.Settings.Default.apiKey,
+                Query = schoolName,
+                Types = "School",
+                Location = new Location(40.51141, 142.975786),
+                Radius = 480
+
+
+
+            };
+
+            var result = GoogleMaps.PlacesText.Query(request);
+
+            
+            switch (result.Status)
+            {
+                case(GoogleMapsApi.Entities.PlacesText.Response.Status.OVER_QUERY_LIMIT):
+                    logger.Error("You have exceeded your Google API query limit.");
+                    break;
+
+                case(GoogleMapsApi.Entities.PlacesText.Response.Status.INVALID_REQUEST):
+                    logger.Error("Google Maps API, Invalid Request");
+                    break;
+
+                case (GoogleMapsApi.Entities.PlacesText.Response.Status.OK):
+                    logger.Info("Status Ok");
+                   break;
+
+                case (GoogleMapsApi.Entities.PlacesText.Response.Status.REQUEST_DENIED):
+                    logger.Error("Google Maps API, Request Denied");
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (result.Status == GoogleMapsApi.Entities.PlacesText.Response.Status.OK)
+            {
+                mapPlaceId = result.Results.FirstOrDefault().PlaceId;
+            };
+            
+
+
+
+            return mapPlaceId;
         }
 
         #region IDisposable interface  

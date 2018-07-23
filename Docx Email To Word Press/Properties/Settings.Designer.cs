@@ -211,5 +211,23 @@ namespace DocxEmailToWordPress.Properties {
                 return ((int)(this["apiPostTimeOut"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AIzaSyCQCrCh1-9tF5QOwlP1krrwuuvD5Kmg4Zo")]
+        public string apiKey {
+            get {
+                return ((string)(this["apiKey"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool enableMaps {
+            get {
+                return ((bool)(this["enableMaps"]));
+            }
+        }
     }
 }
