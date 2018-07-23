@@ -234,7 +234,14 @@ namespace DocxEmailToWordPress
 
                                     // text from the docx file and return a HTML table
                                     using (GetWordHtml getWordHtml = new GetWordHtml()) {
+
+                                        // add new attachment name to html body
+                                        getWordHtml.AttachmentName = attachment.FileName;
+
+                                        // read the Docx file and return the Schools Table as a HTML table. 
                                         htmldata = getWordHtml.ReadWordDocument(filePath);
+
+                                        
 
                                         // post HTML table from docx
                                         var responseData = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
@@ -248,7 +255,7 @@ namespace DocxEmailToWordPress
                                         logger.Info("File: " + filePath + " Posted Status: " + responseData.ResponseStatus.ToString());
 
                                         
-
+                                        // if the post is unsuccesful record response data for REST API to logger4net log
                                         if (!responseData.IsSuccessful)
                                         {
                                             logger.Debug("Error Exception: " + responseData.ErrorException);

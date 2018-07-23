@@ -229,5 +229,32 @@ namespace DocxEmailToWordPress.Properties {
                 return ((bool)(this["enableMaps"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("480")]
+        public int mapRadius {
+            get {
+                return ((int)(this["mapRadius"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("40.51141")]
+        public double mapCentreLat {
+            get {
+                return ((double)(this["mapCentreLat"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("142.975786")]
+        public double mapCentreLng {
+            get {
+                return ((double)(this["mapCentreLng"]));
+            }
+        }
     }
 }

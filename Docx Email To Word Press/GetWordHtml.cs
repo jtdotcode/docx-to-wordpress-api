@@ -9,9 +9,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using GoogleMapsApi.Entities.Common;
 using GoogleMapsApi.Entities.PlacesText.Request;
-using GoogleMapsApi.Entities.PlacesText.Response;
 using GoogleMapsApi;
-using GoogleMapsApi.Entities.Elevation.Response;
 
 namespace DocxEmailToWordPress
 {
@@ -24,10 +22,10 @@ namespace DocxEmailToWordPress
 
         // Specify whether the instance is disposed. 
         private bool disposed = false;
-        
+
         // The word package 
         private WordprocessingDocument package = null;
-        
+
         /// <summary> 
         ///  Read Word Document 
         /// </summary> 
@@ -38,8 +36,12 @@ namespace DocxEmailToWordPress
         Dictionary<String, Double> dic = new Dictionary<string, double>();
         String multiSchoolTitle = Properties.Settings.Default.multiSchoolTitle;
         String closingDate = string.Empty;
-        String[] searchString = { "Monday,", "Tuesday,", "Wednesday,", "Thursday,", "Friday,", "Saturday,",  "Sunday," };
+        String[] searchString = { "Monday,", "Tuesday,", "Wednesday,", "Thursday,", "Friday,", "Saturday,", "Sunday," };
         Boolean enableMaps = Properties.Settings.Default.enableMaps;
+        public String AttachmentName { set; get; }
+        Double mapCentreLng = Properties.Settings.Default.mapCentreLng;
+        Double mapCentreLat = Properties.Settings.Default.mapCentreLat;
+        int mapRadius = Properties.Settings.Default.mapRadius;
 
 
 
@@ -261,7 +263,7 @@ namespace DocxEmailToWordPress
             String totalHoursString = totalHours.ToString();
             String closingDateString = closingDate;
 
-            HtmlString htmlString = new HtmlString($"<!--test--><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p><p><i>Click on School Name for Google Map Directions</i></p>");
+            HtmlString htmlString = new HtmlString($"<!--{AttachmentName}--><table width=\"624\" height=\"302\" border=\"1\" cellpadding=\"1\"><tr><td width=\"469\" height=\"44\" align=\"left\"><strong>School Name</strong></td><td width=\"139\" align=\"center\"><strong>Hours Per Week</strong></td></tr><tr><td height=\"217\" align=\"left\" valign=\"top\">{schools}</td><td align=\"center\" valign=\"top\">{hours}</td></tr><tr><td height=\"31\" align=\"right\"><strong>Total Hours</strong></td><td align=\"center\">{totalHoursString}</td></tr></table><p><strong>The closing date for this application is: {closingDateString} - 3:30PM</strong></p><p><small><i>Click on the School Name for Google Map directions.</i></small></p>");
 
             // log html string
             logger.Info(htmlString.ToString());
@@ -297,8 +299,8 @@ namespace DocxEmailToWordPress
                 ApiKey = Properties.Settings.Default.apiKey,
                 Query = schoolName,
                 Types = "School",
-                Location = new Location(40.51141, 142.975786),
-                Radius = 480
+                Location = new Location(mapCentreLat, mapCentreLng),
+                Radius = mapRadius
 
 
 
