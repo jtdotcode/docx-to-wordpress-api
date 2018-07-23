@@ -64,9 +64,6 @@ C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\DocxEmailTo
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CopyComplete
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\Docx Email To Word Press.exe
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\Docx Email To Word Press.pdb
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx Email To Word Press.exe.config
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx Email To Word Press.exe
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx Email To Word Press.pdb
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\DocumentFormat.OpenXml.dll
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Microsoft.Win32.Primitives.dll
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Newtonsoft.Json.dll
@@ -93,12 +90,13 @@ C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Newtonsoft.Json.xml
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CoreCompileInputs.cache
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx Email To Word Press.exe
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx Email To Word Press.pdb
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.dll
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.xml
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\log4net.dll
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\log4net.xml
 C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\GoogleMapsApi.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx Email To Word Press.exe.CodeAnalysisLog.xml
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx Email To Word Press.exe.lastcodeanalysissucceeded
+C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.exe.config
+C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.exe
+C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.pdb
+C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx2WP.exe
+C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx2WP.pdb
