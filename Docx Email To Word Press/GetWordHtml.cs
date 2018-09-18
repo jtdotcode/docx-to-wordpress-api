@@ -10,6 +10,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using GoogleMapsApi.Entities.Common;
 using GoogleMapsApi.Entities.PlacesText.Request;
 using GoogleMapsApi;
+using GoogleMapsApi.Entities.Geocoding.Request;
 
 namespace DocxEmailToWordPress
 {
@@ -219,8 +220,10 @@ namespace DocxEmailToWordPress
                 var x = item.Value;
                 totalHours = x + totalHours;
 
+
                 var placeId = GetMapPlaceId(item.Key.ToString());
                 var schoolName = item.Key.ToString();
+
 
                 try
                 {
@@ -302,26 +305,24 @@ namespace DocxEmailToWordPress
                 Location = new Location(mapCentreLat, mapCentreLng),
                 Radius = mapRadius
 
-
-
             };
 
-            var result = GoogleMaps.PlacesText.Query(request);
+            var result = GoogleMaps.PlacesText.QueryAsync(request);
 
-            
-            switch (result.Status)
+
+            switch (result.Result.Status)
             {
-                case(GoogleMapsApi.Entities.PlacesText.Response.Status.OVER_QUERY_LIMIT):
+                case (GoogleMapsApi.Entities.PlacesText.Response.Status.OVER_QUERY_LIMIT):
                     logger.Error("You have exceeded your Google API query limit.");
                     break;
 
-                case(GoogleMapsApi.Entities.PlacesText.Response.Status.INVALID_REQUEST):
+                case (GoogleMapsApi.Entities.PlacesText.Response.Status.INVALID_REQUEST):
                     logger.Error("Google Maps API, Invalid Request");
                     break;
 
                 case (GoogleMapsApi.Entities.PlacesText.Response.Status.OK):
                     logger.Info("Status Ok");
-                   break;
+                    break;
 
                 case (GoogleMapsApi.Entities.PlacesText.Response.Status.REQUEST_DENIED):
                     logger.Error("Google Maps API, Request Denied");
@@ -331,15 +332,34 @@ namespace DocxEmailToWordPress
                     break;
             }
 
-            if (result.Status == GoogleMapsApi.Entities.PlacesText.Response.Status.OK)
+            if (result.Result.Status == GoogleMapsApi.Entities.PlacesText.Response.Status.OK)
             {
-                mapPlaceId = result.Results.FirstOrDefault().PlaceId;
+                mapPlaceId = result.Result.Results.FirstOrDefault().PlaceId;
             };
+
+            GeocodingRequest geocoding = new GeocodingRequest()
+            {
+                ApiKey = Properties.Settings.Default.apiKey,
+                PlaceId = mapPlaceId,
+                Components = new GeocodingComponents()
+                {
+                    Country = "AU"
+                }
+            };
+
+            var georesult = GoogleMaps.Geocode.QueryAsync(geocoding);
+
+            if(georesult.Result.Status != GoogleMapsApi.Entities.Geocoding.Response.Status.ZERO_RESULTS)
+            {
+                return mapPlaceId;
+
+            } else
+            {
+                return String.Empty;
+            }
+
+
             
-
-
-
-            return mapPlaceId;
         }
 
         #region IDisposable interface  
