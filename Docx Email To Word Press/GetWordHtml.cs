@@ -11,6 +11,8 @@ using GoogleMapsApi.Entities.Common;
 using GoogleMapsApi.Entities.PlacesText.Request;
 using GoogleMapsApi;
 using GoogleMapsApi.Entities.Geocoding.Request;
+using System.Threading;
+using GoogleMapsApi.Entities.Geocoding.Response;
 
 namespace DocxEmailToWordPress
 {
@@ -339,25 +341,30 @@ namespace DocxEmailToWordPress
 
             GeocodingRequest geocoding = new GeocodingRequest()
             {
-                ApiKey = Properties.Settings.Default.apiKey,
-                PlaceId = mapPlaceId,
-                Components = new GeocodingComponents()
-                {
-                    Country = "AU"
-                }
+                ApiKey = "***REMOVED***",
+                PlaceId = mapPlaceId
+                
+                
             };
 
-            var georesult = GoogleMaps.Geocode.QueryAsync(geocoding);
+            var cts = new CancellationTokenSource(); 
 
-            if(georesult.Result.Status != GoogleMapsApi.Entities.Geocoding.Response.Status.ZERO_RESULTS)
+            var georesult = GoogleMaps.Geocode.QueryAsync(geocoding, cts.Token).Result;
+
+
+            bool has = georesult.Results.Any(a => a.AddressComponents.Any(x => x.LongName == "Tamworth"));
+
+            if(georesult.Status == Status.OK && has)
             {
                 return mapPlaceId;
-
-            } else
-            {
-                return String.Empty;
             }
+            else
+            {
 
+                return String.Empty;
+            };
+
+            
 
             
         }
