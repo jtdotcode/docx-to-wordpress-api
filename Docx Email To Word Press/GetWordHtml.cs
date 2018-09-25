@@ -16,10 +16,11 @@ using GoogleMapsApi.Entities.Geocoding.Response;
 
 namespace DocxEmailToWordPress
 {
+   
     class GetWordHtml : IDisposable
-
-
+        
     {
+        
         // log4net class log name
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -232,7 +233,7 @@ namespace DocxEmailToWordPress
                     if (placeId != String.Empty && enableMaps)
                     {
 
-                        sbSchools.Append("< a href=\"https://www.google.com/maps/dir/?api=1&origin=none&origin_place_id=" + placeId + "&travelmode=driving\">" + schoolName +  "</ a >");
+                        sbSchools.Append("< a href=\"https://www.google.com/maps/dir/?api=1&origin=none&origin_place_id=" + placeId + "&travelmode=driving\"  target=\"_blank\" rel=\"noopener\">" + schoolName +  "</ a >");
                         sbSchools.Append("<br />");
 
                         sbHours.Append(item.Value.ToString());
@@ -278,6 +279,7 @@ namespace DocxEmailToWordPress
 
         }
 
+        
 
         public String GetTitle()
         {
@@ -296,23 +298,30 @@ namespace DocxEmailToWordPress
           
         }
 
+
+
+
         public String GetMapPlaceId(String schoolName)
         {
+
+
             String mapPlaceId = String.Empty;
 
             PlacesTextRequest request = new PlacesTextRequest() {
                 ApiKey = Properties.Settings.Default.apiKey,
                 Query = schoolName,
-                Types = "School",
+                Types = "school",
                 Location = new Location(mapCentreLat, mapCentreLng),
                 Radius = mapRadius
 
+
+
             };
 
-            var result = GoogleMaps.PlacesText.QueryAsync(request);
+            var result = GoogleMaps.PlacesText.QueryAsync(request).Result;
 
 
-            switch (result.Result.Status)
+            switch (result.Status)
             {
                 case (GoogleMapsApi.Entities.PlacesText.Response.Status.OVER_QUERY_LIMIT):
                     logger.Error("You have exceeded your Google API query limit.");
@@ -334,27 +343,37 @@ namespace DocxEmailToWordPress
                     break;
             }
 
-            if (result.Result.Status == GoogleMapsApi.Entities.PlacesText.Response.Status.OK)
+
+
+            if (result.Status == GoogleMapsApi.Entities.PlacesText.Response.Status.OK)
             {
-                mapPlaceId = result.Result.Results.FirstOrDefault().PlaceId;
+                //var mapPlaceIdSelect = from address in result.Results where address.FormattedAddress == "111111" select address.PlaceId;
+
+
+                mapPlaceId = result.Results.FirstOrDefault().PlaceId;
+
             };
 
             GeocodingRequest geocoding = new GeocodingRequest()
             {
-                ApiKey = "***REMOVED***",
+                ApiKey = Properties.Settings.Default.apiKey,
                 PlaceId = mapPlaceId
-                
-                
+
+
             };
 
-            var cts = new CancellationTokenSource(); 
+            var cts = new CancellationTokenSource();
 
             var georesult = GoogleMaps.Geocode.QueryAsync(geocoding, cts.Token).Result;
 
 
-            bool has = georesult.Results.Any(a => a.AddressComponents.Any(x => x.LongName == "Tamworth"));
+            bool isInArea = georesult.Results.Any(x => x.AddressComponents.Any(y => y.ShortName == "AU"));
 
-            if(georesult.Status == Status.OK && has)
+            if (isInArea) { 
+            isInArea = georesult.Results.Any(x => x.AddressComponents.Any(y => y.LongName == "Victoria"));
+            }
+
+            if (georesult.Status == Status.OK && isInArea)
             {
                 return mapPlaceId;
             }
