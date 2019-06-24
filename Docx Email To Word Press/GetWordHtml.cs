@@ -97,10 +97,12 @@ namespace DocxEmailToWordPress
             // if both list have the same amount of elements then assume the data is correct
             // and merge lists into a dictionary with school name as key can hours as value. 
 
-            if (schoolsList.Count != HoursList.Count)
+            if (schoolsList.Count != HoursList.Count || HoursList.Count == 0.0 )
             {
                 logger.Error("something Went Wrong the lists aren't even");
                 logger.Error("Schools list = " + schoolsList.Count + " " + "Hours List = " + HoursList.Count);
+                return null;
+
 
             } else
             {

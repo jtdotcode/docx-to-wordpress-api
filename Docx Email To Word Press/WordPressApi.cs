@@ -58,7 +58,7 @@ namespace DocxEmailToWordPress
            
             IRestResponse response = client.Execute(request);
 
-            // blocking needs to be cleaned up, could use somehting from the libary 
+            // blocking needs to be cleaned up, could use something from the library 
 
             if (response.IsSuccessful)
             {

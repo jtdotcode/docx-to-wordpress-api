@@ -4,6 +4,7 @@ using System.Linq;
 using OpenPop.Mime;
 using OpenPop.Pop3;
 using System.IO;
+using RestSharp;
 
 namespace DocxEmailToWordPress
 {
@@ -238,29 +239,54 @@ namespace DocxEmailToWordPress
                                         // add new attachment name to html body
                                         getWordHtml.AttachmentName = attachment.FileName;
 
+                                       
                                         // read the Docx file and return the Schools Table as a HTML table. 
                                         htmldata = getWordHtml.ReadWordDocument(filePath);
 
-                                        
+                                        IRestResponse responseData = null;
 
-                                        // post HTML table from docx
-                                        var responseData = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
-
-                                        // check if successful
-                                        posted = responseData.IsSuccessful;
-
-                                        // update List<PostLog> element Post with the Returned Data
-                                        emailLog.ElementAt(messageNum).PostStatus = responseData.ResponseStatus.ToString();
-
-                                        logger.Info("File: " + filePath + " Posted Status: " + responseData.ResponseStatus.ToString());
-
-                                        
-                                        // if the post is unsuccesful record response data for REST API to logger4net log
-                                        if (!responseData.IsSuccessful)
+                                        if (htmldata != null)
                                         {
-                                            logger.Debug("Error Exception: " + responseData.ErrorException);
-                                            logger.Debug("Post Error StatusCode: " + responseData.StatusCode);
-                                            logger.Debug("Post Error Message: " + responseData.ErrorMessage);
+
+                                            // post HTML table from docx
+                                            responseData = wordPressApi.PostData(htmldata, getWordHtml.GetTitle());
+
+                                            // check if successful
+                                            posted = responseData.IsSuccessful;
+
+                                            // update List<PostLog> element Post with the Returned Data
+                                            emailLog.ElementAt(messageNum).PostStatus = responseData.ResponseStatus.ToString();
+
+                                            logger.Info("File: " + filePath + " Posted Status: " + responseData.ResponseStatus.ToString());
+
+
+                                        }
+                                        else
+                                        {
+
+                                            posted = false;
+                                            logger.Error("File: " + filePath + " Contains an 0 amount of hours or something went wrong");
+
+                                        }
+
+                                        
+
+                                        
+
+                                        
+
+                                        
+                                        // if the post is unsuccessful record response data for REST API to logger4net log
+                                        if (!posted)
+                                        {
+                                            if (responseData != null) {
+
+                                                logger.Debug("Error Exception: " + responseData.ErrorException);
+                                                logger.Debug("Post Error StatusCode: " + responseData.StatusCode);
+                                                logger.Debug("Post Error Message: " + responseData.ErrorMessage);
+
+                                            }
+                                            
                                         }
 
                                     } 
@@ -308,6 +334,22 @@ namespace DocxEmailToWordPress
                                         if (!attachment.FileName.Contains(DocumentFileNameContains)){
 
                                             logger.Info($"Document File Name doesnt Contain: {DocumentFileNameContains} FileName is: {filePath} ");
+                                        }
+
+                                        // trying to remove file
+                                        try
+                                        {
+                                            if (File.Exists(filePath)){
+
+                                                File.Delete(filePath);
+
+                                            }
+                                            
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            logger.Fatal(ex);
+
                                         }
 
 
