@@ -222,16 +222,19 @@ namespace DocxEmailToWordPress
 
             foreach (var item in dictionary)
             {
-                var x = item.Value;
-                totalHours = x + totalHours;
-
-
-                var placeId = GetMapPlaceId(item.Key.ToString());
-                var schoolName = item.Key.ToString();
-
-
+               
                 try
                 {
+                    var x = item.Value;
+                    totalHours = x + totalHours;
+
+
+                    var placeId = GetMapPlaceId(item.Key.ToString());
+                    var schoolName = item.Key.ToString();
+
+
+
+
                     if (placeId != String.Empty && enableMaps)
                     {
 
@@ -259,7 +262,7 @@ namespace DocxEmailToWordPress
                 catch (Exception ex)
                 {
                     logger.Error(ex);
-                    throw;
+                    //throw;
                 }
 
 
@@ -341,6 +344,10 @@ namespace DocxEmailToWordPress
                     logger.Error("Google Maps API, Request Denied");
                     break;
 
+                case (GoogleMapsApi.Entities.PlacesText.Response.Status.ZERO_RESULTS):
+                    logger.Info("Zero results");
+                    return String.Empty;
+                    
                 default:
                     break;
             }

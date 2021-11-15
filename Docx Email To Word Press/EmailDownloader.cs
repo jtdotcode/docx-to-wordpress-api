@@ -27,7 +27,7 @@ namespace DocxEmailToWordPress
         static bool smtpSSL = Properties.Settings.Default.smtpSSL;
 
 
-        static String allowedEmailAddress = Properties.Settings.Default.allowedEmailAddress;
+        static String[] allowedEmailAddress = delimitAllowedEmails(Properties.Settings.Default.allowedEmailAddress);
         
 
         WordPressApi wordPressApi = new WordPressApi();
@@ -87,6 +87,26 @@ namespace DocxEmailToWordPress
             }
 
             
+
+        }
+
+        private static string[] delimitAllowedEmails(string allowedEmailsString)
+        {
+
+            var allowedEmails = new List<string>();
+
+            if (allowedEmailsString.Contains(','))
+            {
+                allowedEmails = allowedEmailsString.Split(',').ToList();
+
+                return allowedEmails.ToArray();
+            }
+
+            allowedEmails.Add(allowedEmailsString);
+
+
+            return allowedEmails.ToArray();
+
 
         }
 
@@ -156,7 +176,7 @@ namespace DocxEmailToWordPress
 
 
                         // check if the message is from specific sender address, else delete the message
-                        if (client.GetMessage(i).Headers.From.Address == allowedEmailAddress)
+                        if (allowedEmailAddress.Contains(client.GetMessage(i).Headers.From.Address))
                         {
                             // add each message to a List<Message> Array
                             allMessages.Add(client.GetMessage(i));
