@@ -112,7 +112,7 @@ namespace DocxEmailToWordPress
 
         public string checkBccAddress(string s)
         {
-            if (s == String.Empty)
+            if (s == String.Empty || s == null)
             {
                 var emptyTo = "Hidden BCC Address";
                 return emptyTo;
@@ -156,7 +156,6 @@ namespace DocxEmailToWordPress
 
                         logger.Info("Total Emails to Download are : " + messageCount);
                         logger.Info("Processing " + i + " of " + messageCount);
-                        
 
                         // create log with email details
                         emailLog.Add(new PostLog()
@@ -175,6 +174,8 @@ namespace DocxEmailToWordPress
                         });
 
 
+
+
                         // check if the message is from specific sender address, else delete the message
                         if (allowedEmailAddress.Contains(client.GetMessage(i).Headers.From.Address))
                         {
@@ -186,6 +187,7 @@ namespace DocxEmailToWordPress
 
                         } else
                         {
+                            
                             // delete the message if not from specific sender
 
                             var subject = client.GetMessage(i).Headers.Subject;
@@ -195,13 +197,16 @@ namespace DocxEmailToWordPress
 
                             // add Error message to Messages List Array in PostData
                             
-                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + allowedEmailAddress + " Deleting " + subject + "From " + from);
+                           emailLog.ElementAt(messageNum).Messages.Add("Email not from " + allowedEmailAddress.ToString() + " Deleting " + subject + "From " + from);
 
-                            logger.Info("Email not from " + allowedEmailAddress + " Deleted email subject is: " + subject + "email is from: " + from);
-                            
-                            
+                            logger.Info("Email not from " + allowedEmailAddress.ToString() + " Deleted email subject is: " + subject + "email is from: " + from);
+
+                            break;
                             
                         }
+
+
+                        
 
 
                         //need to fix this NOT going to work.
