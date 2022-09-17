@@ -59,42 +59,42 @@ C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\System.Diag
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csprojAssemblyReference.cache
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CoreCompileInputs.cache
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CopyComplete
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\DocumentFormat.OpenXml.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Microsoft.Win32.Primitives.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Newtonsoft.Json.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\OpenPop.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\RestSharp.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.AppContext.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Console.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Diagnostics.DiagnosticSource.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Globalization.Calendars.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.Compression.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.Compression.ZipFile.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.FileSystem.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.FileSystem.Primitives.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.Packaging.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Net.Http.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Net.Sockets.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.Algorithms.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.Encoding.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.Primitives.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.X509Certificates.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Xml.ReaderWriter.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\DocumentFormat.OpenXml.xml
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Newtonsoft.Json.xml
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Diagnostics.DiagnosticSource.xml
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CoreCompileInputs.cache
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.xml
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Microsoft.Win32.Primitives.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Newtonsoft.Json.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\OpenPop.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\RestSharp.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.AppContext.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Console.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Globalization.Calendars.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.Compression.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.Compression.ZipFile.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.FileSystem.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.FileSystem.Primitives.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.IO.Packaging.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Net.Http.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Net.Sockets.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.Algorithms.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.Encoding.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.Primitives.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Xml.ReaderWriter.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Newtonsoft.Json.xml
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\DocxEmailToWordPress.csproj.CoreCompileInputs.cache
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\log4net.xml
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\log4net.dll
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\log4net.xml
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\GoogleMapsApi.dll
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.exe.config
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.exe
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.pdb
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx2WP.exe
-C:\Users\***REMOVED***\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx2WP.pdb
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\GoogleMapsApi.dll
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.exe.config
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.exe
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\bin\Debug\Docx2WP.pdb
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx2WP.exe
+C:\Users\john\Git\Docx Email To Word Press\Docx Email To Word Press\obj\Debug\Docx2WP.pdb
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\Docx2WP.exe.config
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\Docx2WP.exe
 C:\Users\John\git\DocxToWordPress\Docx Email To Word Press\bin\Debug\Docx2WP.pdb

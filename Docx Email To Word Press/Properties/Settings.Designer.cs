@@ -25,7 +25,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("smtp.gmail.com")]
         public string smtpHost {
             get {
                 return ((string)(this["smtpHost"]));
@@ -34,7 +34,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("pop@ioit.com.au")]
         public string smtpUsername {
             get {
                 return ((string)(this["smtpUsername"]));
@@ -43,7 +43,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("&Tw2pwXYt6")]
         public string smtpPassword {
             get {
                 return ((string)(this["smtpPassword"]));
@@ -70,7 +70,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("john@ioit.com.au")]
         public string smtpSendTo {
             get {
                 return ((string)(this["smtpSendTo"]));
@@ -79,7 +79,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("pop@ioit.com.au")]
         public string smtpSentFrom {
             get {
                 return ((string)(this["smtpSentFrom"]));
@@ -88,7 +88,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("john@ioit.com.au")]
         public string allowedEmailAddress {
             get {
                 return ((string)(this["allowedEmailAddress"]));
@@ -133,7 +133,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("pop@ioit.com.au")]
         public string popUsername {
             get {
                 return ((string)(this["popUsername"]));
@@ -142,7 +142,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("&Tw2pwXYt6")]
         public string popPassword {
             get {
                 return ((string)(this["popPassword"]));
@@ -169,7 +169,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://ioit.com.au/wp-json/wp/v2/posts")]
         public string wpApiUrl {
             get {
                 return ((string)(this["wpApiUrl"]));
@@ -187,7 +187,7 @@ namespace DocxEmailToWordPress.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("***REMOVED***")]
+        [global::System.Configuration.DefaultSettingValueAttribute("QjgHH9S2HTfO!I3DMqmOXW4E")]
         public string wpSitePassword {
             get {
                 return ((string)(this["wpSitePassword"]));
