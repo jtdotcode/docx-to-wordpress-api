@@ -11,4 +11,4 @@ and scraps the document for the relevant information and then posts it to a Word
 
 ## Flow Diagram
 
-![flow diagram](https://github.com/jtdotcode/docx-to-wordpress-api/images/docx-to-wordPress-flow.png)
+![flow diagram](https://github.com/jtdotcode/docx-to-wordpress-api/blob/main/images/docx-to-wordPress-flow.png)
